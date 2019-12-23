@@ -59,7 +59,7 @@
 
 ## 시작하기
 
-소스 코드는 Windows10 64bit + Visiau Studio Code + Node v10.16.0 + NPM v6.13.4 + express 4.16.1 환경에서 제작되었습니다.
+소스 코드는 Windows10 64bit + Visiau Studio Code + Node v10.16.0 + NPM v6.13.4 + Express 4.16.1 환경에서 제작되었습니다.
 
 * Node.js의 Async/Await 도구를 사용해 (Promise) 비동기 제어를 하고 있습니다.
 
