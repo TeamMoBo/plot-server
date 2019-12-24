@@ -8,7 +8,16 @@ async function postUser() {
     return userData;
 }
 
+async function signIn(user) {
+    // const userDao = await userDao.selectUser();
+    const idx = userDao.idx;
 
+    return idx;
+}
+
+async function signUp(user) {
+    
+}
 module.exports = {
     postUser
 }
