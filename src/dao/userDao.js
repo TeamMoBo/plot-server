@@ -1,14 +1,22 @@
 const mysql = require('../library/mysql');
 
+const table = 'user';
+
 async function insertUser(userData) {
-    const insertSql = `INSERT INTO user () VALUES (?, ?, ?, ?, ?, ?, ?);`;
-    return await mysql.query(insertSql, userData);
+    const {userIdx, userName, userPassword, userNickName, userId, userImg, userAge, userComment, userLocation} = userData;
+    const fields = 'userIdx, userName, userPassword, userNickName, userId, userImg, userAge, userComment, userLocation';
+    const values = [userIdx, userName, userPassword, userNickName, userId, userImg, userAge, userComment, userLocation];
+    const insertUser = `INSERT INTO ${table} (${fields}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+
+    return await mysql.query(insertUser, values);
 }
 
 async function selectUser(userData) {
-    const searchUser = `SELECT * FROM () WHERE userIdx = ${userIdx}`;
-    return await mysql.query(searchUser, userData);
+    const searchUser = `SELECT * FROM ${table} WHERE id = ${userData.id}`;
+
+    return await mysql.query(searchUser);
 }
 module.exports = {
-    insertUser
+    insertUser,
+    selectUser
 }
