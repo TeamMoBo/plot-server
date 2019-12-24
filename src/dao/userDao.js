@@ -5,6 +5,10 @@ async function insertUser(userData) {
     return await mysql.query(insertSql, userData);
 }
 
+async function selectUser(userData) {
+    const searchUser = `SELECT * FROM () WHERE userIdx = ${userIdx}`;
+    return await mysql.query(searchUser, userData);
+}
 module.exports = {
     insertUser
 }

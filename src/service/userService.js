@@ -16,7 +16,8 @@ async function signIn(user) {
 }
 
 async function signUp(user) {
-    
+    const userDao = await userDao.insertUser(user);
+    return true;
 }
 module.exports = {
     postUser

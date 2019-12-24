@@ -31,7 +31,7 @@ async function signUp(req, res) {
     try {
         if(await userService.signUp(req.body)) {
             response (res, returnCode.OK, '회원가입 성공');
-        } 
+        }
     } catch (error) {
         console.log(error.message);
         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
