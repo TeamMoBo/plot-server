@@ -18,9 +18,14 @@ async function postUser(req, res) {
 async function signIn(req, res) {
     try {    
         const idx = await userService.signIn(req.body);
-        const token = jwt.sign(idx);
-
-        response(res, returnCode.OK, '로그인 성공', token);
+        if(idx == -1) {
+            response(res, returnCode.UNAUTHORIZED, '아이디가 없습니다');
+        } else if(idx == -2) {
+            response(res, returnCode.UNAUTHORIZED, '비밀번호가 틀립니다');
+        } else {
+            const token = jwt.sign(idx);
+            response(res, returnCode.OK, '로그인 성공', token);
+        }
     } catch (error) {
         console.log(error.message);
         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
