@@ -6,11 +6,27 @@ const returnCode = require("../library/returnCode");
 function sign(idx) {
   const payload = {
     idx: idx
-  };
+  }; 
+    const result = {
+        "token" : jwt.sign(payload, jwtConfig.secretKey, jwtConfig.option)
+    }
+    return result;
+}
 
-  const token = jwt.sign(payload, jwtConfig.secretKey, jwtConfig.option);
-
-  return token;
+function verify(authorization) {
+    try {
+        return jwt.verify(authorization, jwtConfig.secretKey);
+    } catch (err) {
+        if (err.message === 'jwt expired') {
+            console.log('expired token');
+            return -3;
+        } else if (err.message === 'invalid token') {
+            console.log('invalid token');
+            return -2;
+        } else {
+            console.log("invalid token");
+            return -2;
+        }
 }
 
 function verify(authorization) {
