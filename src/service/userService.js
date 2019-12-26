@@ -1,11 +1,8 @@
 const userDao = require('../dao/userDao');
 
-async function postUser() {
-    // const userDao = await userDao.insertUser();
-    const userData = '니들이 게맛을 알아?';
-    
-    return userData;
-}
+
+const jwt = require('../library/jwt');
+const encryption = require('../library/encryption');
 
 /*
 - 로그인 성공경우
@@ -17,24 +14,39 @@ async function postUser() {
 
 async function signIn(user) {
     const users = await userDao.selectUser(user);
-    console.log(users);
+    const hashedPassword = await encryption.notSaltEncrypt(user.password, users[0].userSalt);
     if (users.length <= 0) {
         return -1;
-    } else if (user.password != users[0].userPassword) {
+    } else if (hashedPassword != users[0].userHash) {
         return -2;
     } else {
-        return users[0].userIdx;
+        const token = jwt.sign(users[0].userIdx);
+        return token;
     }
 }
 
-async function signUp(userData) {
-    const users = await userDao.insertUser(userData);
+async function signUp(user) {
+
+    // 파라미터 값이 부족합니다.
+    const {id, name, password, nickName, age, comment, location} = user;
+    if(!id || !name || !password || !nickName || !age || !comment || !location) {
+        return -1;
+    }
+    // 비밀번호 암호화 과정
+    const passwordEncryption = await encryption.encrypt(user.password);
+    const salt = passwordEncryption.salt;
+    const hash = passwordEncryption.hashPassword;
+    let encryptedUser = user;
+    delete encryptedUser.password;
+    encryptedUser['salt'] = salt;
+    encryptedUser['hash'] = hash;
+
+    const users = await userDao.insertUser(encryptedUser);
     console.log(users);
     return users; 
 }
 
 module.exports = {
-    postUser,
     signIn,
     signUp
 }

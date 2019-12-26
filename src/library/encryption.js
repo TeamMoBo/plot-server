@@ -26,12 +26,12 @@ const encryption = {
     },
     notSaltEncrypt: (password, salt) => {
         return new Promise((resolve, reject) => {
-            crypto.pbkdf2(password, salt, 100000,64, 'sha512', (err, hashed) => {
+            crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, hashed) => {
                 if(err) {
                     reject(err);
                 } else {
-                    const hashPassword = hashed.toString('base64');
-                    resolve(hashPassword);
+                    const hash = hashed.toString('base64');
+                    resolve(hash);
                 }
             })
         })
