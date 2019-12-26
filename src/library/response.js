@@ -1,5 +1,5 @@
 const response = (res, status, message, data) => {
-    res.status(200)
+    res.status(status)
         .json({
             'status': status,
             'message': message,
@@ -8,7 +8,7 @@ const response = (res, status, message, data) => {
 };
 
 const errResponse = (res, status, message) => {
-    res.status(200)
+    res.status(status)
         .json({
             'status': status,
             'message': message

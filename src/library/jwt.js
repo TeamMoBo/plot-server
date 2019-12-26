@@ -8,13 +8,14 @@ function sign(idx) {
         'idx': idx
     }
 
-    const token = jwt.sign(payload, jwtConfig.secretKey, jwtConfig.option);
-
-    return token;
+    // const token = jwt.sign(payload, jwtConfig.secretKey, jwtConfig.option);
+    const result = {
+        "token" : jwt.sign(payload, jwtConfig.secretKey, jwtConfig.option)
+    }
+    return result;
 }
 
 function verify(authorization) {
-
     try {
         return jwt.verify(authorization, jwtConfig.secretKey);
     } catch (err) {
