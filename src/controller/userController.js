@@ -1,8 +1,7 @@
-const { response, errResponse } = require('../library/response');
-const returnCode = require('../library/returnCode');
-const jwt = require('../library/jwt');
-
-const userService = require('../service/userService');
+const { response, errResponse } = require("../library/response");
+const returnCode = require("../library/returnCode");
+const userService = require("../service/userService");
+const jwt = require("../library/jwt");
 
 async function signIn(req, res) {
     try {
@@ -35,12 +34,11 @@ async function signUp(req, res) {
     } catch (error) {
         console.log(error);
         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 내부 에러');
-
-    }
+  }
 }
 
 module.exports = {
-    signIn,
-    signUp,
+  signIn,
+  signUp
 }
 
