@@ -10,12 +10,11 @@ async function insertUser(userData) {
     return await mysql.query(insertUser, values);
 }
 
-async function selectUser(user) {
-    const searchUser = `SELECT * FROM ${table} WHERE userId = ?`;
-    const values = [user.id];
-    return await mysql.query(searchUser, values);
-}
+async function selectUser(userData) {
+    const searchUser = `SELECT * FROM ${table} WHERE id = ${userData.id}`;
 
+    return await mysql.query(searchUser);
+}
 module.exports = {
     insertUser,
     selectUser

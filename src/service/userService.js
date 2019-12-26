@@ -71,17 +71,6 @@ async function signIn(user) {
     }
 }
 
-// async function signUpImg(img) {
-//     const users = await userDao.insertImg(img);
-//     if (users.length <= 0) {
-//         return -1;
-//     } else if (hashedPassword != users[0].userHash) {
-//         return -2;
-//     } else {
-//         const token = jwt.sign(users[0].userIdx);
-//         return token;
-//     }
-// }
 module.exports = {
     signIn,
     signUp

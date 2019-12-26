@@ -1,5 +1,6 @@
 const { response, errResponse } = require('../library/response');
 const returnCode = require('../library/returnCode');
+const jwt = require('../library/jwt');
 
 const userService = require('../service/userService');
 
@@ -38,23 +39,8 @@ async function signUp(req, res) {
     }
 }
 
-// async function signUpImg(req, res) {
-//     try {
-//         const image = req.files[0].location;
-//         const check = await userService.signUpImg({image});
-//         if(check == -1) {
-//             response(res, returnCode.BAD_REQUEST, '데이터가 부족합니다')
-//         } else {
-//             response(res, returnCode.OK, '이미지 등록 성공');
-//         }
-//     } catch (error) {
-//         console.log(err);
-//         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 내부 에러');
-//     }
-// }
-
 module.exports = {
     signIn,
     signUp,
-    // signUpImg
 }
+
