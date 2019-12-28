@@ -8,7 +8,7 @@ const hashtagDao = require('../dao/hashtagDao');
 
 async function login(req, res) {
     try {
-        const users = await userDao.selectUser(req.body);
+        const users = await userDao.selectUserById(req.body);
         if(!req.body) {
             errResponse(res, returnCode.BAD_REQUEST, "데이터 입력해주세요");
         }
@@ -57,7 +57,7 @@ async function signup(req, res) {
         userDummyData['salt'] = userSalt;
         userDummyData['hash'] = userHash;
 
-        const alreadyUser = await userDao.selectUser(req.body);
+        const alreadyUser = await userDao.selectUserById(req.body);
         if(!req.body.id) {
             errResponse(res, returnCode.BAD_REQUEST, '데이터가 부족합니다.');
         } else if (!(alreadyUser.length <= 0)) {
