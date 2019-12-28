@@ -45,7 +45,7 @@ async function selectUserByIdx(userIdx) {
 
 module.exports = {
     insertUser,
-    selectUser,
+    selectUserById,
     selectUserByEncryption,
     selectUserByIdx
 }
