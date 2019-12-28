@@ -18,4 +18,4 @@ async function updateMypage(userIdx, userData) {
 module.exports = {
   selectMypage,
   updateMypage
-};
+}
