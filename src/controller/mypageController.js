@@ -1,11 +1,5 @@
-/*
-받은 거 처리
-원래) 라우터 를 통해서 응답하는 내용
-*/
-
 const { response, errResponse } = require("../library/response");
 const returnCode = require("../library/returnCode");
-
 const mypageService = require("../service/mypageService");
 
 async function getMypage(req, res) {

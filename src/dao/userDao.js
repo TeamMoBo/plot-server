@@ -31,7 +31,21 @@ async function selectUserById(userData) {
     return await mysql.query(searchUser, value);
 }
 
+
+async function selectUserByEncryption(userSalt, userHash){
+    const selectQuery = `SELECT * FROM user WHERE userSalt = ? AND userHash`;
+    return await mysql.query(selectQuery, [userSalt, userHash])
+    
+}
+
+async function selectUserByIdx(userIdx) {
+    const selectQuery = `SELECT * FROM user WHERE userIdx = ?`;
+    return await mysql.query(selectQuery, [userIdx]);
+}
+
 module.exports = {
     insertUser,
-    selectUserById
+    selectUser,
+    selectUserByEncryption,
+    selectUserByIdx
 }
