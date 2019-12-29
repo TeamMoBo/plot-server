@@ -55,7 +55,47 @@ async function postMatchingConfirm(req, res) {
     }
 }
 
+async function postMatchingDecision(req, res) {
+    try {
+        const matchingResult = await matchingService.postMatchingDecision(req.headers.authorization, req.body);
+        if(matchingResult == -1) {
+            console.log('매칭 거절');
+            response(res, returnCode.ACCEPTED, '매칭 실패');    
+        } else if(matchingResult == -2) {
+            console.log('토큰 오류');
+            errResponse(res, returnCode.UNAUTHORIZED, '토큰 오류');
+        } else {
+            console.log('매칭 승인');
+            response(res, returnCode.OK, '매칭 승인');
+        }
+    } catch (error) {
+        console.log(error.message);
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
+    }
+}
+
+async function getMatchingAddress(req, res) {
+    try {
+        const matchingResult = await matchingService.getMatchingAddress(req.headers.authorization);
+        if(matchingResult == -1) {
+            console.log('토큰 오류');
+            errResponse(res, returnCode.UNAUTHORIZED, '토큰 오류');
+        } else if(matchingResult == -2) {
+            console.log('시간 초과');
+            errResponse(res, returnCode.BAD_REQUEST, '시간 초과');
+        } else {
+            console.log('주소 요청 성공');
+            response(res, returnCode.OK, '주소 요청 성공', matchingResult);
+        }
+    } catch (error) {
+        console.log(error.message);
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
+    }
+}
+
 module.exports = {
     getMatching,
-    postMatchingConfirm
+    postMatchingConfirm,
+    postMatchingDecision,
+    getMatchingAddress
 }
