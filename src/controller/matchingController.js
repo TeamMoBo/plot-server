@@ -11,7 +11,7 @@ const matchingService = require("../service/matchingService");
  */
 async function getMatching(req, res) {
     try {
-        const matchingResult = await matchingService.getMatching(req.headers.token);
+        const matchingResult = await matchingService.getMatching(req.headers.authorization);
 
         if(matchingResult == -1) {
             console.log('매칭 실패');
