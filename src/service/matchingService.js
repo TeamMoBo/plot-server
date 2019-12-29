@@ -14,13 +14,11 @@ const hashTagDao = require("../dao/hashtagDao");
  */
 function findOpponentIdx(matchingArr, userIdx) {
     let opponentIdx;
-    matchingArr.map((data) => {
-        if(data.userLeftIdx == userIdx) {
-            opponentIdx = data.userRightIdx;
-        } else if(data.userRightIdx == userIdx) {
-            opponentIdx = data.userLeftIdx;
-        }
-    })
+    if(matchingArr[0].userLeftIdx == userIdx) {
+            opponentIdx = matchingArr[0].userRightIdx;
+    } else if (matchingArr[0].userRightIdx == userIdx) {
+            opponentIdx = matchingArr[0].userLeftIdx;
+    }
 
     return opponentIdx;
 }
@@ -29,11 +27,11 @@ async function getMatching(token) {
     const userIdx = verify(token).idx;
     const userData = await userDao.selectUserByIdx(userIdx);
     if(userData.length == 0) {
-        return -1;
+        return -2;
     }
     const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx); //시간대 + 상태 확인 안함
     if(userMatchingData.length == 0) {
-        return -2;
+        return -1;
     }
     const opponentUserIdx = findOpponentIdx(userMatchingData, userIdx);
     const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
@@ -74,13 +72,31 @@ async function postMatchingConfirm(token, reply) {
     const userIdx = verify(token).idx;
     const userData = await userDao.selectUserByIdx(userIdx);
     if(userData.length == 0) {
-        return -1;
+        return -2;
     }
     
     const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx); //시간대 + 상태 확인 안
-    // if(userMatchingData[0])
+    let matchingIdx = userMatchingData[0].matchingIdx;
     
-    
+    if(userMatchingData[0].matchingLeftState == userIdx) {
+        if(reply == true) {
+            await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 2);
+        } else {
+            await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 0);
+        }     
+    } else {
+        if(reply == true) {
+            await matchingDao.updateRightStateByMatchingIdx(matchingIdx, 2);
+        } else {
+            await matchingDao.updateRightStateByMatchingIdx(matchingIdx, 0);
+        }
+    }    
+
+    if(reply == 0) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 module.exports = {
