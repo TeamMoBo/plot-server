@@ -1,45 +1,55 @@
 const { response, errResponse } = require("../library/response");
 const returnCode = require("../library/returnCode");
-const mypageService = require("../service/mypageService");
+const ticketService = require("../service/ticketService");
+const { verify } = require("../library/jwt");
 
-const { response, errResponse } = require("../library/response");
-const returnCode = require("../library/returnCode");
-const userService = require("../service/userService");
-const jwt = require("../library/jwt");
-
-async function postUser(req, res) {
+async function getTicket(req, res) {
   try {
-    const user = await userService.postUser(req.body);
-    console.log(user);
-    response(res, returnCode.OK, "테스트 성공", user);
+    const token = req.headers.authorization;
+    const decoded = verify(token);
+
+    if (decoded < -1) {
+      console.log("토큰 오류");
+      errResponse(res, returnCode.UNAUTHORIZED, "토큰 오류");
+    }
+    const userIdx = decoded.idx;
+    const ticketData = await ticketService.getTicket(userIdx);
+    console.log(ticketData);
+
+    if (!ticketData) {
+      console.log("존재하지 않는 파라미터");
+      errResponse(res, returnCode.BAD_REQUEST, "존재하지 않는 파라미터");
+    }
+
+    console.log("티켓 상태 호출");
+    response(res, returnCode.OK, "티켓 상태 성공", ticketData);
   } catch (error) {
     console.log(error.message);
     errResponse(res, returnCode.INTERNAL_SERVER_ERROR, "서버 오류");
   }
 }
 
-async function signIn(req, res) {
+async function putTicket(req, res) {
   try {
-    const idx = await userService.signIn(req.body);
-    if (idx == -1) {
-      response(res, returnCode.UNAUTHORIZED, "아이디가 없습니다");
-    } else if (idx == -2) {
-      response(res, returnCode.UNAUTHORIZED, "비밀번호가 틀립니다");
-    } else {
-      const token = jwt.sign(idx);
-      response(res, returnCode.OK, "로그인 성공", token);
-    }
-  } catch (error) {
-    console.log(error.message);
-    errResponse(res, returnCode.INTERNAL_SERVER_ERROR, "서버 오류");
-  }
-}
+    const token = req.headers.authorization;
+    const decoded = verify(token);
 
-async function signUp(req, res) {
-  try {
-    if (await userService.signUp(req.body)) {
-      response(res, returnCode.OK, "회원가입 성공");
+    if (decoded < -1) {
+      console.log("토큰 오류");
+      errResponse(res, returnCode.UNAUTHORIZED, "토큰 오류");
     }
+
+    const userIdx = decoded.idx;
+    const userTicketData = req.body;
+    const ticketData = await ticketService.putTicket(userIdx, userTicketData);
+
+    if (!ticketData) {
+      console.log("존재하지 않는 파라미터");
+      errResponse(res, returnCode.BAD_REQUEST, "존재하지 않는 파라미터");
+    }
+
+    console.log("티켓 수정 상태 호출");
+    response(res, returnCode.OK, "티켓 수정 상태 성공", ticketData);
   } catch (error) {
     console.log(error.message);
     errResponse(res, returnCode.INTERNAL_SERVER_ERROR, "서버 오류");
@@ -47,7 +57,6 @@ async function signUp(req, res) {
 }
 
 module.exports = {
-  postUser,
-  signIn,
-  signUp
+  getTicket,
+  putTicket
 };
