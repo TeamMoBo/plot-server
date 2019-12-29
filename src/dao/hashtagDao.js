@@ -23,6 +23,25 @@ async function insertHashtag(hashtag) {
     return await mysql.query(insertHashtag, values);
 }
 
+async function selectGenreTagByUseridx(userIdx) {
+    const selectQuery = `SELECT * FROM preferGenreTag WHERE userIdx = ?`;
+    return await mysql.query(selectQuery, [userIdx]);
+}
+
+async function selectCharmingTagByUseridx(userIdx) {
+    const selectQuery = `SELECT * FROM attractPointTag WHERE userIdx = ?`;
+    return await mysql.query(selectQuery, [userIdx]);
+}
+
+async function selectFavorTagByUserIdx(userIdx) {
+    const selectQuery = `SELECT * FROM favorTag WHERE userIdx = ?`;
+    return await mysql.query(selectQuery, [userIdx]);
+
+}
+
 module.exports = {
-    insertHashtag
+    insertHashtag,
+    selectGenreTagByUseridx,
+    selectCharmingTagByUseridx,
+    selectFavorTagByUserIdx
 }

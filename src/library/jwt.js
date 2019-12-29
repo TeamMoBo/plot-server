@@ -15,7 +15,7 @@ function sign(idx) {
 
 function verify(authorization) {
     try {
-        return jwt.verify(authorization, jwtConfig.secretKey);
+       return jwt.verify(authorization, jwtConfig.secretKey);
     } catch (err) {
         if (err.message === 'jwt expired') {
             console.log('expired token');
