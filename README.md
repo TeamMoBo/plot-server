@@ -2,21 +2,22 @@
 >
 > S.O.P.T 25기 서버 파트 앱잼 프로젝트
 >
-> ---- 작품 설명 ---- (미정)
+> <img width="300" alt="KakaoTalk_20191228_220853327" src="https://user-images.githubusercontent.com/56102421/71595790-6647a100-2b80-11ea-87e4-0fec041cfd7a.png">
+
 
 ![node_badge](https://img.shields.io/badge/node-%3E%3D%208.0.0-green)
 ![npm_bedge](https://img.shields.io/badge/npm-v6.10.1-blue)
 
 * 프로젝트 기간: 2019.12.22 ~ 2019.01.04
-* [API 문서]() (미정) 
+* [API 문서](https://github.com/TeamMoBo/mobo-server/wiki)
 
 
 
 
 ## 프로젝트 설명
 
-'**MoBo**'입니다.
-
+'**Plot**'입니다.
+영화 친구 찾기 
 
 
 ## Workflow
