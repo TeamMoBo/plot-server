@@ -45,7 +45,6 @@ async function postUserSignIn(req, res) {
  */
 async function postUserSignUp(req, res) {
     try {
-        console.log(req.files);
         if((req.files[0])) {
             const image = req.files[0].location;
             req.body["image"] = image;

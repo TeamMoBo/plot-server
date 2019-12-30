@@ -53,7 +53,6 @@ async function postUserSignIn(user) {
  * @return check 
  */
 async function postUserSignUp(user) {
-    console.log(user);
     const {id, name, password, nickname, age, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, favor, school, major, kakao} = user;
     if(!id || !name || !password || !nickname || !age || !comment || !location || !selectGender || !selectMinAge || !selectMaxAge || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
         return -1;
