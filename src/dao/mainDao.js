@@ -7,22 +7,33 @@ const mysql = require('../library/mysql');
 */
 
 async function selectMainMovie() {  // 영화 랜덤 추천 3개 
-    const selectSql = `SELECT movieIdx, movieName, movieScore, movieGenre, movieImg, movieShowTime, movieURL 
+    const selectSql = `SELECT movieIdx, movieName, movieScore, movieGenre, movieImg, movieRunTime, movieURL 
     FROM movie ORDER BY RAND() LIMIT 3`;
     
     return await mysql.query(selectSql);
 }
 
-async function selectMainReserve(userIdx) {    // 예매한 영화 조회
-    const selectSql = `SELECT reservationIdx, movie.movieIdx, userIdx, reservationDate, reservationTime, movieName, movieScore, movieImg 
-    FROM reservation JOIN movie ON reservation.movieIdx = movie.movieIdx 
-    WHERE userIdx = ?`;
+// Select * From A left JOIN B
+// ON A.name = B.name
+// left JOIN C
+// ON A.name = C.name
 
-    console.log(userIdx);
-    return await mysql.query(selectSql, userIdx);
+async function selectMainReserveMovie(userIdx) {    // 예매한 영화 조회
+    const selectMovieSql = `SELECT reservation.userIdx, reservationMovie.movieIdx, movieImg, movieName, movieScore 
+    FROM reservationMovie JOIN movie ON reservationMovie.movieIdx = movie.movieIdx 
+    left JOIN reservation ON reservationMovie.reservationIdx = reservation.reservationIdx WHERE userIdx = ?`;
+    return await mysql.query(selectMovieSql, userIdx);
+}
+
+async function selectMainReserveDate(userIdx) {    // 예매한 영화 시간조회
+    const selectScheduleSql = `SELECT reservationDate, reservationTime, reservationWeekday 
+    FROM reservation JOIN reservationHour ON reservation.reservationIdx = reservationHour.reservationIdx WHERE userIdx = ?`;
+
+    return await mysql.query(selectScheduleSql, userIdx);
 }
 
 module.exports = {
     selectMainMovie,
-    selectMainReserve
+    selectMainReserveMovie,
+    selectMainReserveDate
 }
