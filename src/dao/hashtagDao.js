@@ -10,16 +10,11 @@ const mysql = require('../library/mysql');
  */
 async function insertHashtag(hashtag) {
     const table = hashtag.hashtag;
-    // console.log(table);
     const hashtagName = hashtag.hashtag + 'Name';
-    console.log(hashtagName);
     const fields = `${hashtagName}, userIdx`;
     const values = [hashtag.hashtagName, hashtag.userIdx];
-    // console.log(hashtag.hashtagName);
     const insertHashtag = `INSERT INTO ${table} (${fields}) VALUES (?, ?)`;
-    // console.log(fields);
-    // console.log('----------');
-    // console.log(values);
+
     return await mysql.query(insertHashtag, values);
 }
 
