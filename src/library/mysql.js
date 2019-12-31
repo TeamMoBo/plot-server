@@ -28,6 +28,7 @@ async function query(...args) {
 async function transaction(...args) {
     await getMysqlPool();
 
+    const result = true;
     const connection = await mysqlPool.getConnection();
 
     try {
@@ -38,8 +39,10 @@ async function transaction(...args) {
     } catch (error) {
         console.log(error);
         await connection.rollback();
+        result = undefined;
     } finally {
         connection.release();
+        return result;
     }
 }
 
