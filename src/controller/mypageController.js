@@ -1,6 +1,7 @@
 const { response, errResponse } = require("../library/response");
 const returnCode = require("../library/returnCode");
 const mypageService = require("../service/mypageService");
+const { verify } = require("../library/jwt");
 
 async function getMypage(req, res) {
   try {
@@ -15,20 +16,49 @@ async function getMypage(req, res) {
 
 async function putMypage(req, res) {
   try {
-    const mypage = await mypageService.putMypage(
-      req.headers.authorization,
-      req.body
-    );
-    if (mypage == -1) {
+    const token = req.headers.authorization;
+    const decoded = verify(token);
+    const userIdx = decoded.idx;
+    const userData = req.body;
+
+    console.log(userData);
+    const mypage = await mypageService.putMypage(userIdx, userData);
+    if (decoded < -1) {
       console.log("토큰 오류");
       errResponse(res, returnCode.UNAUTHORIZED, "토큰 오류");
-    } else if (mypage == -2) {
+    } else if (!userData) {
       console.log("존재하지 않는 파라미터");
       errResponse(res, returnCode.BAD_REQUEST, "존재하지 않는 파라미터");
     } else {
-      console.log(mypage);
       console.log("마이페이지 수정 상태 호출");
-      response(res, returnCode.OK, "마이페이지 수정 성공", mypage);
+      response(res, returnCode.OK, "마이페이지 수정 성공");
+    }
+  } catch (error) {
+    console.log(error.message);
+    errResponse(res, returnCode.INTERNAL_SERVER_ERROR, "서버 오류");
+  }
+}
+
+async function putPhotoMypage(req, res) {
+  try {
+    const token = req.headers.authorization;
+    const decoded = verify(token);
+    const userIdx = decoded.idx;
+    const userPhotoData = req.file.location;
+
+    const photoMypage = await mypageService.putPhotoMypage(
+      userIdx,
+      userPhotoData
+    );
+    if (decoded < -1) {
+      console.log("토큰 오류");
+      errResponse(res, returnCode.UNAUTHORIZED, "토큰 오류");
+    } else if (!userPhotoData) {
+      console.log("존재하지 않는 파라미터");
+      errResponse(res, returnCode.BAD_REQUEST, "존재하지 않는 파라미터");
+    } else {
+      console.log("마이페이지 사진 수정 상태 호출");
+      response(res, returnCode.OK, "마이페이지 사진 수정 성공");
     }
   } catch (error) {
     console.log(error.message);
@@ -38,5 +68,6 @@ async function putMypage(req, res) {
 
 module.exports = {
   getMypage,
-  putMypage
+  putMypage,
+  putPhotoMypage
 };
