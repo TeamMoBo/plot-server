@@ -21,19 +21,15 @@ async function getMain(req, res) {
         }
 
         const timeObjectLength = Object.keys(main.reserveDate);   // reserveDate length
-        // console.log(main.reserveDate[0].reservationTime)
-        // console.log(main.reserveDate[1].reservationTime)
-        // console.log(main.reserveDate[2].reservationTime)
 
-        for(let i = 0; i<timeObjectLength; i++){
+        for(let i = 0; i<timeObjectLength.length; i++){
             let timeArr = main.reserveDate[i].reservationTime;
             let timeArrLength = timeArr.length;
-            console.log(main.reserveDate[i])
+
             if(timeArrLength < 3){  // reservationTime을 3개 이상 받지 않았을 경우 error 
                 errResponse(res, returnCode.BAD_REQUEST, '선택한 시간이 3개 미만입니다');
             }
         }
-
         response(res, returnCode.OK, '메인화면 조회 성공', main);
 
     } catch (error) {
