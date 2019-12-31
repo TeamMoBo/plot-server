@@ -32,8 +32,14 @@ async function selectMainReserveDate(userIdx) {    // 예매한 영화 시간조
     return await mysql.query(selectScheduleSql, userIdx);
 }
 
+async function selectMatchingState(userIdx) {    // 매칭상태 조회
+    const selectMatchingSql = `SELECT matchingLeftState, matchingRightState FROM matching WHERE userLeftIdx = ? OR userRightIdx = ?`
+    return await mysql.query(selectMatchingSql, [userIdx, userIdx]);
+}
+
 module.exports = {
     selectMainMovie,
     selectMainReserveMovie,
-    selectMainReserveDate
+    selectMainReserveDate,
+    selectMatchingState
 }

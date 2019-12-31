@@ -9,15 +9,32 @@ async function getMain(userIdx) {
     const randMovie = await mainDao.selectMainMovie();  // 랜덤영화정보
     const reserveMovie = await mainDao.selectMainReserveMovie(userIdx); // 영화정보
     const reserveDate = await mainDao.selectMainReserveDate(userIdx);   // 영화시간정보
+    const matchingData = await mainDao.selectMatchingState(userIdx);
     
     const allData = {
         "userIdx" : 0,
+        "matchingState" : 0,
         "randMovie" : [],
         "reserveMovie" : [],
         "reserveDate" : [],
     }
 
     allData.userIdx = reserveMovie[0].userIdx;
+
+    /* 
+    매칭 상태
+    matchingTable가져오고 status 1 : 1 인 경우 TRUE, 
+    아니면 0, 1
+    */
+
+    for(let i = 0; i<matchingData.length; i++){
+        let left = matchingData[i].matchingLeftState;
+        let right = matchingData[i].matchingRightState;
+
+        if(left == 1 && right == 1){    // 매칭 상태가 1:1일 경우
+            allData.matchingState = 1;
+        }
+    }
 
     for(let i = 0; i<randMovie.length; i++){
         // 랜덤영화 정보조회
