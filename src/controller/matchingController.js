@@ -93,9 +93,20 @@ async function getMatchingAddress(req, res) {
     }
 }
 
+async function matchingAlgorithm(req, res) {
+    try {
+        const matchingResult = await matchingService.matchingAlgorithm();
+        response(res, returnCode.OK, '매칭 생성', matchingResult);
+    } catch(error) {
+        console.log(error.message);
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
+    }
+}
+
 module.exports = {
     getMatching,
     postMatchingConfirm,
     postMatchingDecision,
-    getMatchingAddress
+    getMatchingAddress,
+    matchingAlgorithm
 }
