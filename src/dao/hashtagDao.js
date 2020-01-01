@@ -8,13 +8,13 @@ const mysql = require("../library/mysql");
  * @return 해시태그 성공정보
  */
 async function insertHashtag(hashtag) {
-    const table = hashtag.hashtag;
-    const hashtagName = hashtag.hashtag + 'Name';
-    const fields = `${hashtagName}, userIdx`;
-    const values = [hashtag.hashtagName, hashtag.userIdx];
-    const insertHashtag = `INSERT INTO ${table} (${fields}) VALUES (?, ?)`;
+  const table = hashtag.hashtag;
+  const hashtagName = hashtag.hashtag + "Name";
+  const fields = `${hashtagName}, userIdx`;
+  const values = [hashtag.hashtagName, hashtag.userIdx];
+  const insertHashtag = `INSERT INTO ${table} (${fields}) VALUES (?, ?)`;
 
-    return await mysql.query(insertHashtag, values);
+  return await mysql.query(insertHashtag, values);
 }
 
 async function selectGenreTagByUseridx(userIdx) {
@@ -33,7 +33,7 @@ async function selectFavorTagByUserIdx(userIdx) {
 }
 
 async function updateCharmingTagByUserIdx(userIdx, userData) {
-  //해시태그 디비 수정
+  //해시태그 디비 수정 ( 미완 )
   const updateQuery = `UPDATE attractPointTag SET attractPointTagName = ? WHERE userIdx = ?`;
   return await mysql.query(updateQuery, [
     userData.attractPointTagName,

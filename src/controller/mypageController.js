@@ -3,6 +3,7 @@ const returnCode = require("../library/returnCode");
 const mypageService = require("../service/mypageService");
 const { verify } = require("../library/jwt");
 
+//마이페이지 텍스트 정보 받기
 async function getMypage(req, res) {
   try {
     const mypage = await mypageService.getMypage(req.headers.authorization);
@@ -14,6 +15,7 @@ async function getMypage(req, res) {
   }
 }
 
+//마이페이지 텍스트 정보 수정
 async function putMypage(req, res) {
   try {
     const token = req.headers.authorization;
@@ -40,6 +42,7 @@ async function putMypage(req, res) {
   }
 }
 
+//마이페이지 사진 정보 수정
 async function putPhotoMypage(req, res) {
   try {
     const token = req.headers.authorization;

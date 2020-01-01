@@ -7,8 +7,11 @@ async function getHash(token) {
   const userIdx = verify(token).idx;
   console.log("해시태그 받는 부분");
   const getHashData = await hashtagDao.selectCharmingTagByUseridx(userIdx);
-  console.log(getHashData);
-  return getHashData;
+  const charmData = {
+    attractPointTagName: getHashData.map(it => it.attractPointTagName)
+  };
+  //return getHashData;
+  return charmData;
 }
 
 async function putHash(userIdx, body) {
