@@ -10,7 +10,13 @@ async function insertChatRoom(chatRoomId, matchingIdx) {
     return await mysql.query(insertQuery, [chatRoomId, matchingIdx]);
 }
 
+async function deleteAllChatRoom() {
+    const deleteQuery = `DELETE FROM chatRoomId`;
+    return await mysql.query(deleteQuery);
+}
+
 module.exports = {
     selectChatRoomByMatchingIdx,
-    insertChatRoom
+    insertChatRoom,
+    deleteAllChatRoom
 }

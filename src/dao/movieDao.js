@@ -1,70 +1,73 @@
 const mysql = require('../library/mysql');
 
-const { response, errResponse } = require('../library/response');
-const returnCode = require('../library/returnCode');
-
 // 예매율 TOP10 영화조회(현재상영작,개봉예정작)
-async function selectMovie(movieReleaseStatus) {
-    console.log(movieReleaseStatus)
-
-    if(movieReleaseStatus == 0){   // 현재상영작
-        const selectCurrentSql = `SELECT * FROM movie WHERE movieReleaseStatus = 0 
-        ORDER BY movieReserveRate DESC LIMIT 10`;
-
-        return await mysql.query(selectCurrentSql);
-    }
-
-    if(movieReleaseStatus == 1){   // 개봉에정작
-        const selectFutureSql = `SELECT * FROM movie WHERE movieReleaseStatus = 1 
-        ORDER BY movieReserveRate DESC LIMIT 10`;
-
-        return await mysql.query(selectFutureSql);
-    }
+async function selectCurrentMovie() {
+    const selectCurrentSql = `SELECT movieIdx, movieReleaseStatus, movieName, movieScore, movieImg, movieReserveRate 
+    FROM movie WHERE movieReleaseStatus = 0 ORDER BY movieReserveRate DESC LIMIT 10`;
+    return await mysql.query(selectCurrentSql);
+}
+async function selectFutureMovie() {
+    const selectFutureSql = `SELECT movieIdx, movieReleaseStatus, movieName, movieScore, movieImg, movieReserveRate 
+    FROM movie WHERE movieReleaseStatus = 1 ORDER BY movieReserveRate DESC LIMIT 10`;
+    return await mysql.query(selectFutureSql);
 }
 
-async function insertMovie(userIdx, movieData) {    // 영화 선택
 
-    for(let i = 0; i<movieData.movieIdx.length; i++){
-        const insertMovieSql = `INSERT INTO reservation (movieIdx, userIdx) VALUES (?, ?)`;
-        const insertMovieResult = await mysql.query(insertMovieSql, [movieData[i].movieIdx, userIdx]);
-
-        for(let j = 0; j<movieData.reservationDate.length; j++){
-            const insertDateSql = `INSERT INTO reservationSchedule (reservationIdx, reservationTime, reservationDate) VALUES (?, ?, ?)`;
-            const insertDateResult = await mysql.query(insertDateSql, 
-                [insertMovieSql[i].insertId, movieData[j].reservationTime, movieData[j].reservationDate]);
-
-            if(!insertDateResult){  // 쿼리가 제대로 수행되지 않았을 경우 = -1
-                return -1;
-            }
-        }
-        if(!insertMovieResult){ // 쿼리가 제대로 수행되지 않았을 경우 = -1
-            return -1;
-        }
-    }
-    return true;
+async function selectMovieReserveMovie(userIdx) {    // 예매한 영화 조회
+    const selectReserveSql = `SELECT reservation.userIdx, reservationMovie.movieIdx, reservation.reservationIdx
+    FROM reservationMovie JOIN reservation 
+    ON reservationMovie.reservationIdx = reservation.reservationIdx WHERE userIdx = ?`;
+    return await mysql.query(selectReserveSql, [userIdx]);
 }
 
-async function updateMovie(userIdx, movieData) {    // 영화 수정
-    // const selectMovieSql = `SELECT * FROM reservation JOIN reservationSchedule 
-    // ON reservation.reservationIdx = reservationSchedule.reservationIdx WHERE userIdx = ?`;
-    // const selectMovieResult = await mysql.query(selectMovieSql, [userIdx]);
+async function selectMovieReserveDate(userIdx) {    // 예매한 시간조회
+    const selectTimeSql = `SELECT reservationDate, reservationTime
+    FROM reservation JOIN reservationHour 
+    ON reservation.reservationIdx = reservationHour.reservationIdx WHERE userIdx = ?`;
 
-    // const updateMovieSql = `INSERT INTO reservation (userIdx, movieIdx) VALUES (?, ?);`;
-    // const updateDateSql = `INSERT INTO reservationSchedule (reservationIdx, reservationTime, reservationDate) VALUES (?, ?, ?)`;
-    // "UPDATE user SET notistate = ? WHERE user_idx =?";
+    return await mysql.query(selectTimeSql, [userIdx]);
+}
 
-    // 출처: https://121202.tistory.com/28 [책방 창고]
-    // const updateResult = `UPDATE reservation SET movieIdx = ? WHERE userIdx = `;
-    // const transaction = await mysql.transaction(async (connection) => {
-    //     const insertMovieResult = await connection.query(insertMovieSql, [userIdx, movieData.movieIdx]);
-    //     const insertDateResult = await connection.query(insertDateSql, 
-    //         [movieData.reservationIdx, movieData.reservationTime, movieData.reservationDate]);
-    // });
-    // return transaction
+
+async function insertReservation(userIdx, movieData, weekday) {    // 예약 idx 선택
+    const insertReserveSql = `INSERT INTO reservation (userIdx, reservationDate, reservationWeekday) VALUES (?, ?, ?)`;
+    return await mysql.query(insertReserveSql, [userIdx, movieData.reservationDate, weekday]);
+}
+async function insertReservationMovie(reservationIdx, movieIdx) {    // 예약영화 선택
+    const insertMovieSql = `INSERT INTO reservationMovie (reservationIdx, movieIdx) VALUES (?, ?)`;
+    return await mysql.query(insertMovieSql, [reservationIdx, movieIdx]);
+}
+async function insertReservationTime(reservationIdx, reservationTime) {    // 예약시간 선택
+    const insertTimeSql = `INSERT INTO reservationHour (reservationIdx, reservationTime) VALUES (?, ?)`;
+    return await mysql.query(insertTimeSql, [reservationIdx, reservationTime]);
+}
+
+
+async function updateReservation(movieData, weekday, userIdx) {    // 예약 idx 수정
+    const updateReserveSql = `UPDATE reservation SET reservationDate = ?, reservationWeekday = ? WHERE userIdx = ?`;
+    return await mysql.query(updateReserveSql, [movieData.reservationDate, weekday, userIdx]);
+}
+async function updateReservationMovie(movieIdx, reservationIdx) {    // 예약영화 수정
+    const updateMovieSql = `UPDATE reservationMovie SET movieIdx = ? WHERE reservationIdx = ?`;
+    return await mysql.query(updateReservationMovie, [movieIdx, reservationIdx]);
+}
+async function updateReservationTime(reservationTime, reservationIdx) {    // 예약시간 수정
+    const updateTimeSql = `UPDATE reservationHour SET reservationTime = ? WHERE reservationIdx = ?`;
+    return await mysql.query(updateReservationTime, [reservationTime, reservationIdx]);
 }
 
 module.exports = {
-    selectMovie,
-    insertMovie,
-    updateMovie
+    selectCurrentMovie,
+    selectFutureMovie,
+
+    selectMovieReserveMovie,
+    selectMovieReserveDate,
+
+    insertReservation,
+    insertReservationMovie,
+    insertReservationTime,
+    
+    updateReservation,
+    updateReservationMovie,
+    updateReservationTime
 }
