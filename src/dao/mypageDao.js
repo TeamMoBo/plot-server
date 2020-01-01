@@ -2,8 +2,9 @@ const mysql = require("../library/mysql");
 const column = require("../library/userColumn");
 
 async function selectMypage(userIdx) {
-  const selectSql = "SELECT * from user WHERE userIdx = ?";
-  console.log("userIdx는 " + userIdx);
+  const selectSql =
+    "SELECT userName, userNickname, userAge, userComment, userImg, userId, userLocation, userSelectGender, userSelectMinAge, userSelectMaxAge, userSchool, userMajor, userKakao from user WHERE userIdx = ?";
+  //console.log("userIdx는 " + userIdx);
   return await mysql.query(selectSql, [userIdx]);
 }
 
@@ -39,13 +40,24 @@ async function selectTicket(userIdx) {
 }
 
 async function updateTicket(userIdx, userTicketData) {
-  //select 하고 update - 1. 현재 값 2. 사용자 값 await 3. 더한거 넣기
+  //console.log(userTicketData.userTicket);
   const editSql =
-    "UPDATE user SET userTicket = userTicket + ?, userPopcorn= userPopcorn+? WHERE userIdx = ?";
+    "UPDATE user SET userTicket = userTicket + ?, userPopcorn= userPopcorn + ? WHERE userIdx = ?";
 
-  return await mysql.query(selectSql, [
-    userData.userTicket,
-    userData.userPopcorn,
+  return await mysql.query(editSql, [
+    userTicketData.userTicket,
+    userTicketData.userPopcorn,
+    userIdx
+  ]);
+}
+
+async function postPay(userIdx, paymentData) {
+  //console.log(paymentData.userTicket);
+  const updateSql =
+    "UPDATE user SET userTicket = userTicket - ?, userPopcorn = userPopcorn - ? WHERE userIdx = ?";
+  return await mysql.query(updateSql, [
+    paymentData.userTicket,
+    paymentData.userPopcorn,
     userIdx
   ]);
 }
@@ -55,5 +67,6 @@ module.exports = {
   updateMypage,
   updatePhotoMypage,
   selectTicket,
-  updateTicket
+  updateTicket,
+  postPay
 };
