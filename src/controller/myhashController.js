@@ -3,6 +3,7 @@ const returnCode = require("../library/returnCode");
 const myhashService = require("../service/myhashService");
 const { verify } = require("../library/jwt");
 
+// 마이페이지 - 해시태그 정보 받기
 async function getHash(req, res) {
   try {
     const hash = await myhashService.getHash(req.headers.authorization);
@@ -14,6 +15,7 @@ async function getHash(req, res) {
   }
 }
 
+// 마이페이지 - 해시태그 정보 수정 ( 미완 )
 async function putHash(req, res) {
   try {
     // const token = req.headers.authorization;
