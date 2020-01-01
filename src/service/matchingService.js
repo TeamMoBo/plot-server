@@ -160,10 +160,12 @@ async function getMatchingAddress(token) {
 }
 
 function checkSameMovie(leftUser, rightUser) {
-    for (let i = 0; i < leftUser['movieList'].length; i++) {
-        for (let j = 0; j < rightUser['movieList'].length; j++) {
-            if (leftUser['movieList'][i] == rightUser['movieList'][j]) {
-                return true;
+    if(leftUser && rightUser){
+        for (let i = 0; i < leftUser['movieList'].length; i++) {
+            for (let j = 0; j < rightUser['movieList'].length; j++) {
+                if (leftUser['movieList'][i] == rightUser['movieList'][j]) {
+                    return leftUser['movieList'][i];
+                }
             }
         }
     }
@@ -173,12 +175,16 @@ function checkSameMovie(leftUser, rightUser) {
 
 
 async function requireCondition(leftUser, rightUser) {
-    // let condition = checkSameMovie(leftUser, rightUser);
-    // if (!condition) {
-    //     return false;
-    // } else {
-        return true;
-    // }
+    let objectCollection;
+    const movieIdx = checkSameMovie(leftUser, rightUser);
+    if (!movieIdx) {
+        return false;
+    } else {
+        objectCollection = movieIdx;
+    }
+
+    
+    return objectCollection;
 }
 
 
@@ -187,26 +193,31 @@ async function randomMatching(leftUserList, rightUserList) {
     let leftList = leftUserList;
     let rightList = rightUserList;
 
+
+    // console.log(leftList);
+    // console.log(rightList);
+
     let matchingList = [];
     while (leftList.length != 0 && rightList.length != 0) {
         const randomNumLeft = Math.floor(Math.random() * 264239) % leftList.length;
-        let tempRightList = JSON.parse(JSON.stringify(rightList)); rightList;
+        let tempRightList = JSON.parse(JSON.stringify(rightList)); 
+        
         while (tempRightList.length != 0) {
             const randomNumRight = Math.floor(Math.random() * 264239) % rightList.length;
+            const condition = await requireCondition(leftList[randomNumLeft], tempRightList[randomNumRight]);
 
-            const condition = await requireCondition(leftList[randomNumLeft], tempRightList[randomNumRight]) 
             if (condition) {
                 //조건에 맞는 경우
                 const matchingObject = {
                     leftUser: leftList[randomNumLeft],
-                    rightUser: tempRightList[randomNumRight]
+                    rightUser: tempRightList[randomNumRight],
+                    movieIdx : condition
                 }
                 matchingList.push(matchingObject);
 
                 leftList.splice(randomNumLeft, 1);
                 for (let i = 0; i < rightList.length; i++) {
-                    if (rightList[i] == tempRightList[randomNumRight]) {
-                        console.log('숙청');
+                    if (rightList[i].userIdx == tempRightList[randomNumRight].userIdx) {
                         rightList.splice(i, 1);
                         break;
                     }
@@ -225,10 +236,6 @@ async function randomMatching(leftUserList, rightUserList) {
         }
 
     }
-
-    console.log(matchingList);
-
-
 
     //매칭이 안된 아무나 상관 없는 부류들
 
@@ -290,6 +297,8 @@ async function matchingAlgorithm() {
         return userData;
     }))
 
+    
+
     //이성 혹은 아무나 상관 없는 사람들 매칭
     let maleUser = [];
     let femaleUser = [];
@@ -305,18 +314,20 @@ async function matchingAlgorithm() {
     }
 
     let matchingResult = await randomMatching(maleUser, femaleUser);
-    //아무나 해주세요 매칭
+    
+    console.log(matchingResult);
+    
+    await Promise.all(matchingResult.map(async (finalMatchingUser) => {
+        const insertDto = {
+            leftUserIdx : finalMatchingUser.leftUser.userIdx,
+            rightUserIdx : finalMatchingUser.rightUser.userIdx,
+            matchingDate : moment().format('YYYY-MM-DD'),
+            movieIdx : finalMatchingUser.movieIdx
+        }
 
-    // await Promise.all((finalMatchingUser) => {
-
-
-    //     const insertDto = {
-    //         leftUserIdx : leftUser.userIdx,
-    //         rightUserIdx : rightUser.userIdx,
-    //         matchingDate : moment().format('YYYY-MM-DD'),
-    //         movieIdx : 1
-    //     }
-    // })
+        const insertResult = await matchingDao.insertMatching(insertDto);
+        console.log(insertResult);
+    }))
 
     return matchingResult;
 }

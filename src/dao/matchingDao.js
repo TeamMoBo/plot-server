@@ -15,8 +15,14 @@ async function updateRightStateByMatchingIdx(matchingIdx) {
     return await mysql.query(updateQuery, [reply, matchingIdx])
 }
 
+async function insertMatching(insertDto) {
+    const insertQuery = `INSERT INTO matching(userLeftIdx, userRightIdx, matchingLeftState, matchingRightState, matchingDate, movieIdx) VALUES(?, ?, 1, 1, ?, ?)`;
+    return await mysql.query(insertQuery, [insertDto.leftUserIdx, insertDto.rightUserIdx, insertDto.matchingDate, insertDto.movieIdx])
+}
+
 module.exports = {
     selectMatchingByUseridx,
     updateLeftStateByMatchingIdx,
-    updateRightStateByMatchingIdx
+    updateRightStateByMatchingIdx,
+    insertMatching
 }
