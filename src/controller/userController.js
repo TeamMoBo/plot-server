@@ -45,8 +45,10 @@ async function postUserSignIn(req, res) {
  */
 async function postUserSignUp(req, res) {
     try {
-        const image = req.files[0].location;
-        req.body["image"] = image;
+        if((req.files[0])) {
+            const image = req.files[0].location;
+            req.body["image"] = image;
+        }
         const check = await userService.postUserSignUp(req.body)
         if(check == -1) {
             response(res, returnCode.BAD_REQUEST, '데이터가 부족합니다');
