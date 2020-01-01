@@ -5,8 +5,8 @@ var upload = require('../../config/multer')
 var userController = require('../controller/userController.js')
 var testUserController = require('../controller/testUserController');
 
-router.post('/signIn', userController.postUserSignIn);
-router.post('/signUp', upload.array('image', 1), userController.postUserSignUp);
+router.post('/signin', userController.postUserSignIn);
+router.post('/signup', upload.array('image', 1), userController.postUserSignUp);
 
 router.post('/testlogin', testUserController.login);
 router.post('/testsignup', testUserController.signup);
