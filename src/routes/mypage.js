@@ -17,6 +17,6 @@ router.put(
 router.get("/ticket", ticketController.getTicket);
 router.put("/ticket", ticketController.putTicket);
 router.get("/info/hashtag", myhashController.getHash);
-router.put("/info/hashtag", myhashController.putHash);
+// router.put("/info/hashtag", myhashController.putHash);
 
 module.exports = router;

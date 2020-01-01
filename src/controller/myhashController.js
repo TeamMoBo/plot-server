@@ -18,22 +18,17 @@ async function getHash(req, res) {
 // 마이페이지 - 해시태그 정보 수정 ( 미완 )
 async function putHash(req, res) {
   try {
-    const token = req.headers.authorization;
-    const decoded = verify(token);
-    const userIdx = decoded.idx;
-    const userData = req.body;
+    // const token = req.headers.authorization;
+    // const decoded = verify(token);
+    // const userIdx = decoded.idx;
+    // const userData = req.body;
 
-    const userHash = await myhashService.putHash(userIdx, userData);
-    if (decoded < -1) {
-      console.log("토큰 오류");
-      errResponse(res, returnCode.UNAUTHORIZED, "토큰 오류");
+    const hashResult = await myhashService.putHash(req.headers.authorization, req.body);
+    if (hashResult != -1) {
+      errResponse(res, returnCode.UNAUTHORIZED, '토큰 오류');
+    } else {
+      response(res, returnCode.OK, "해시태그 수정 성공");
     }
-    if (!userData) {
-      console.log("존재하지 않는 파라미터");
-      errResponse(res, returnCode.BAD_REQUEST, "존재하지 않는 파라미터");
-    }
-    console.log("해시태그 수정 성공");
-    response(res, returnCode.OK, "해시태그 수정 성공");
   } catch (error) {
     console.log(err.message);
     errResponse(res, returnCode.INTERNAL_SERVER_ERROR, "서버 오류");
