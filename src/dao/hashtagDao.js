@@ -8,17 +8,13 @@ const mysql = require("../library/mysql");
  * @return 해시태그 성공정보
  */
 async function insertHashtag(hashtag) {
-  const table = hashtag.hashtag;
-  // console.log(table);
-  const hashtagName = hashtag.hashtag + "Name";
-  console.log(hashtagName);
-  const fields = `${hashtagName}, userIdx`;
-  const values = [hashtag.hashtagName, hashtag.userIdx];
-  // console.log(hashtag.hashtagName);
-  const insertHashtag = `INSERT INTO ${table} (${fields}) VALUES (?, ?)`;
-  // console.log(fields);
-  // console.log(values);
-  return await mysql.query(insertHashtag, values);
+    const table = hashtag.hashtag;
+    const hashtagName = hashtag.hashtag + 'Name';
+    const fields = `${hashtagName}, userIdx`;
+    const values = [hashtag.hashtagName, hashtag.userIdx];
+    const insertHashtag = `INSERT INTO ${table} (${fields}) VALUES (?, ?)`;
+
+    return await mysql.query(insertHashtag, values);
 }
 
 async function selectGenreTagByUseridx(userIdx) {

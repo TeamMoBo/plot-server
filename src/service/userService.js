@@ -9,7 +9,7 @@ const encryption = require('../library/encryption');
  * 
  * @param {*} hashtagType hashtagName 내용들 적은거
  * @param {*} userIdx 사용자 고유 번호
- * @param {*} hashtag 해시태그타입 이름
+ * @param {*} hashtag 해시태그타입 이름 = table명
  * 
  */
 async function insertHashTag(hashtagType, userIdx, hashtag) {
@@ -53,12 +53,11 @@ async function postUserSignIn(user) {
  * @return check 
  */
 async function postUserSignUp(user) {
-    console.log(user);
-    const {id, name, password, nickname, age, image, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, favor, school, major, kakao} = user;
-    if(!id || !name || !password || !nickname || !age || !image || !comment || !location || !selectGender || !selectMinAge || !selectMaxAge || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
+    const {id, name, password, nickname, age, comment, location, gender, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, favor, school, major, kakao} = user;
+    if(!id || !name || !password || !nickname || !age || !comment || !location || !gender || !selectGender || !selectMinAge || !selectMaxAge || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
         return -1;
     }
-
+    
     const alreadyUser = await userDao.selectUserById(user);
     if (!(alreadyUser.length <= 0)) {
         return -2;
@@ -75,12 +74,14 @@ async function postUserSignUp(user) {
     const check = await userDao.insertUser(encryptedUser);
 
     const users = await userDao.selectUserById(user);
-    const userIdx =users[0].userIdx;
+    const userIdx =users[0].userIdx;    
     
-    const arrayPreferGenre = preferGenre.split(',');
-    const arrayAttractPoint = attractPoint.split(',');
-    const arrayFavor = favor.split(',');
-
+    const arrayPreferGenre = preferGenre.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    const arrayAttractPoint = attractPoint.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    const arrayFavor = favor.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    // console.log(arrayPreferGenre);
+    // console.log(arrayAttractPoint);
+    // console.log(arrayFavor);
     var hashtag = "preferGenreTag";
     await insertHashTag(arrayPreferGenre, userIdx, hashtag);
     var hashtag = "attractPointTag";
