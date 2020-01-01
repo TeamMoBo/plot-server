@@ -35,7 +35,7 @@
 
 ## DB ERD
 
-![ERD]() (미정)
+![DB ERD](https://user-images.githubusercontent.com/56102421/71641982-7928b580-2ce7-11ea-8dc0-fc6213f397bf.png)
 
 
 
