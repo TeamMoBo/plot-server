@@ -4,7 +4,7 @@ const { verify } = require('../library/jwt');
 const gcp = require('../gcp/gcp');
 
 const matchingDao = require("../dao/matchingDao");
-const movieReservationDao = require("../dao/movieReservationDao");
+const movieDao = require("../dao/movieDao");
 const userDao = require("../dao/userDao");
 const hashTagDao = require("../dao/hashtagDao");
 const chatRoomDao = require("../dao/chatRoomDao");
@@ -34,7 +34,7 @@ async function getMatching(token) {
     if (userData.length == 0) {
         return -2;
     }
-    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx); //시간대 + 상태 확인 안함
+    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안함
     if (userMatchingData.length == 0) {
         return -1;
     }
@@ -43,8 +43,8 @@ async function getMatching(token) {
 
     //상대방 정보 받아오기
     const opponentUserIdx = findOpponentIdx(userMatchingData, userIdx);
+    console.log(opponentUserIdx);
     const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
-    const meetingStatus = await movieReservationDao.selectMovieReservationByMatchingidx(userMatchingData[0].matchingIdx);
 
     const genreTag = await hashTagDao.selectGenreTagByUseridx(userIdx);
     const genreTagContent = genreTag.map((data) => {
@@ -58,10 +58,9 @@ async function getMatching(token) {
     const favorTagContent = favorTag.map((data) => {
         return data.favorTagName;
     })
-    const movieInfoText = String(moment(meetingStatus[0].movieDate).format('YYYY-MM-DD')) + " " + meetingStatus[0].movieTime + " \n " +
-        meetingStatus[0].moviePlace + " \n " + meetingStatus[0].movieSeat;
+    const movieInfoText = await movieDao.selectMovieNameByMovieIdx(userMatchingData[0].movieIdx, moment().format('YYYY-MM-DD'));
 
-
+    console.log(opponentUserData[0]);
 
     let parsingUser = {
         name: opponentUserData[0].userName,
@@ -73,7 +72,7 @@ async function getMatching(token) {
         genreHash: genreTagContent,
         charmingHash: charmingTagContent,
         favorHash: favorTagContent,
-        moiveInfo: movieInfoText
+        moiveInfo: movieInfoText[0]
     }
 
     return parsingUser;
@@ -85,11 +84,14 @@ async function postMatchingConfirm(token, reply) {
     if (userData.length == 0) {
         return -2;
     }
+    if (reply == undefined) {
+        return -4;
+    }
 
-    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx); //시간대 + 상태 확인 안
+    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
     let matchingIdx = userMatchingData[0].matchingIdx;
-
-    if (userMatchingData[0].matchingLeftState == userIdx) {
+    console.log(userMatchingData[0]);
+    if (userMatchingData[0].userLeftIdx == userIdx) {
         if (reply == true) {
             await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 2);
             return 1;
@@ -114,11 +116,13 @@ async function postMatchingDecision(token, decision) {
     if (userData.length == 0) {
         return -2;
     }
+    if (decision == undefined) {
+        return -4;
+    }
 
-    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx); //시간대 + 상태 확인 안
+    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
     let matchingIdx = userMatchingData[0].matchingIdx;
-
-    if (userMatchingData[0].matchingLeftState == userIdx) {
+    if (userMatchingData[0].userLeftIdx == userIdx) {
         if (decision == true) {
             await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 3);
             return 1;
@@ -144,19 +148,30 @@ async function getMatchingAddress(token) {
         return -1;
     }
 
-    const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx);
-    let chatRoomData = await chatRoomDao.selectChatRoomByMatchingIdx(matchingData[0].matchingIdx);
+    const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx, moment().format('YYYY-MM-DD'));
 
-    if (chatRoomData.length == 0) {
-        const chatRoomId = await gcp.makeChatRoom(matchingData[0].userLeftIdx, matchingData[0].userRightIdx);
-        const insertResult = await chatRoomDao.insertChatRoom(chatRoomId, matchingData[0].matchingIdx);
-        chatRoomData = await chatRoomDao.selectChatRoomByMatchingIdx(insertResult.insertId);
-    }
+    // if(!(matchingData[0].matchingLeftState == 2 && matchingData[0].matchingRightState == 2)) {
+    //     return -3;
+    // }
+
+    let chatRoomData = await chatRoomDao.selectChatRoomByMatchingIdx(matchingData[0].matchingIdx);
     const uid = await gcp.insertFbUser(verifyToken.idx);
-    return {
-        address: chatRoomData[0].chatRoomId,
+
+    let chatroomObject = {
         uid: uid
     }
+    if (chatRoomData.length == 0) {
+        console.log('체크');
+        const chatRoomId = await gcp.makeChatRoom(matchingData[0].userLeftIdx, matchingData[0].userRightIdx);
+        chatroomObject['address'] = chatRoomId;
+        const insertResult = await chatRoomDao.insertChatRoom(chatRoomId, matchingData[0].matchingIdx);
+        return chatroomObject;
+    } else {
+        chatroomObject['address'] = chatRoomData[0].chatRoomId
+        return chatroomObject
+    }
+    
+
 }
 
 function checkSameMovie(leftUser, rightUser) {
@@ -326,17 +341,22 @@ async function matchingAlgorithm() {
         }
 
         const insertResult = await matchingDao.insertMatching(insertDto);
-        console.log(insertResult);
     }))
 
     return matchingResult;
 }
 
+async function deleteMatchingAlgorithm() {
+    let nowadays = String(moment().format('YYYY-MM-DD'));
+    await chatRoomDao.deleteAllChatRoom();
+    await matchingDao.deleteAllMatching(nowadays);
+}
 
 module.exports = {
     getMatching,
     postMatchingConfirm,
     postMatchingDecision,
     getMatchingAddress,
-    matchingAlgorithm
+    matchingAlgorithm,
+    deleteMatchingAlgorithm
 }

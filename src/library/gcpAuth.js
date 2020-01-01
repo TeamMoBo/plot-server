@@ -7,6 +7,12 @@ admin.initializeApp({
         databaseURL: "https://my-project-1511976542359.firebaseio.com"
 });
 
+// var serviceAccount = require("../../config/google-services.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://chotalk-65363.firebaseio.com"
+// });
 
 function gcpAuth() {   
     var db = admin.database();

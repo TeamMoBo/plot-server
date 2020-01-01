@@ -10,6 +10,8 @@ router.post("/confirm", matchingController.postMatchingConfirm);
 router.post("/decision", matchingController.postMatchingDecision);
 router.get("/address", matchingController.getMatchingAddress);
 
-router.get("/matchingAlgorithm", matchingController.matchingAlgorithm);
+router.get("/algorithm", matchingController.matchingAlgorithm);
+router.get("/deleteall", matchingController.deleteMatchingAlgorithm);
+
 module.exports = router;
 

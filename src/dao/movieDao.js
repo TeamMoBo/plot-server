@@ -63,8 +63,15 @@ async function updateMovie(userIdx, movieData) {    // 영화 수정
     // return transaction
 }
 
+
+async function selectMovieNameByMovieIdx(movieIdx) {
+    const selectQuery = `SELECT movieName FROM movie WHERE movieIdx = ?`;
+    return await mysql.query(selectQuery, [movieIdx]);
+}
+
 module.exports = {
     selectMovie,
     insertMovie,
-    updateMovie
+    updateMovie,
+    selectMovieNameByMovieIdx
 }
