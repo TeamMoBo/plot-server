@@ -159,7 +159,7 @@ async function getMatchingAddress(token) {
 
     const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx, moment().format('YYYY-MM-DD'));
 
-    if(matchingData == 0){ 
+    if(matchingData.length == 0){ 
         return -4;;
     }
 

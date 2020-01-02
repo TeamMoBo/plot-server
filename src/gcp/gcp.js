@@ -45,7 +45,7 @@ async function makeChatRoom(leftUserIdx, rightUserIdx) {
     const leftUid = await encryption.notSaltEncrypt(userLeftData[0].userId, hashingSalt);
     const rightUid = await encryption.notSaltEncrypt(userRightData[0].userId, hashingSalt);
     
-    const chatRoomId = moment().format('x') + leftUid.substring(0,5) + rightUid.substring(0,5);
+    const chatRoomId = moment().format('x') + leftUid.replace(/\//gi, '').substring(0,5) + rightUid.replace(/\//gi, '').substring(0,5);
     return chatRoomId;
 }
 
