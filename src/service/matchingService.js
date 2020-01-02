@@ -120,8 +120,14 @@ async function postMatchingDecision(token, decision) {
         return -4;
     }
 
-    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+    const userMatchingData = await matchingDao.selectMatchingByUseridx(userData[0].userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+
+    if(userMatchingData == 0){
+        return -5;
+    }
+    
     let matchingIdx = userMatchingData[0].matchingIdx;
+
     if (userMatchingData[0].userLeftIdx == userIdx) {
         if (decision == true) {
             await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 3);
@@ -149,6 +155,10 @@ async function getMatchingAddress(token) {
     }
 
     const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx, moment().format('YYYY-MM-DD'));
+
+    if(matchingData == 0){ 
+        return -4;;
+    }
 
     // if(!(matchingData[0].matchingLeftState == 2 && matchingData[0].matchingRightState == 2)) {
     //     return -3;

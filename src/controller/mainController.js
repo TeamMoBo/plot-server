@@ -6,13 +6,8 @@ const mainService = require('../service/mainService');
 
 async function getMain(req, res) {  
     try {
-        const section = req.params.section;
         const token = req.headers.authorization;
         const decoded = verify(token); // 토큰 확인용
-
-        // if(!section == 0 || !section == 1 || !section == 2){ 
-        //     errResponse(res, returnCode.BAD_REQUEST, '올바르지 않은 요청'); // section null
-        // }
 
         if(decoded < -1){ // 토큰이 정당하지 않을 경우
             errResponse(res, returnCode.UNAUTHORIZED, '정당하지 않은 토큰');    // invalid token (-2) expired token (-3)
