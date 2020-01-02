@@ -3,6 +3,7 @@ const returnCode = require("../library/returnCode");
 const paymentService = require("../service/paymentService");
 const { verify } = require("../library/jwt");
 
+// 보유티켓 감소 ( -1 )
 async function postPay(req, res) {
   try {
     const token = req.headers.authorization;

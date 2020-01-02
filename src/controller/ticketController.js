@@ -3,6 +3,7 @@ const returnCode = require("../library/returnCode");
 const ticketService = require("../service/ticketService");
 const { verify } = require("../library/jwt");
 
+//보유티켓 확인
 async function getTicket(req, res) {
   try {
     const token = req.headers.authorization;
@@ -27,6 +28,7 @@ async function getTicket(req, res) {
   }
 }
 
+//티켓 구매 ( +1 )
 async function putTicket(req, res) {
   try {
     const token = req.headers.authorization;

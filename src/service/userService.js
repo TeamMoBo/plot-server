@@ -46,15 +46,15 @@ async function postUserSignIn(user) {
 /**
  * 회원가입
  * 
- * @param {id, name, password, nickname, age, image, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, myLikes, school, major, kakao} user 유저 정보
+ * @param {id, name, password, nickname, age, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, myLikes, school, major, kakao} user 유저 정보
  * 
  * @return -1 데이터가 부족할 때
  * @return -2 아이디가 존재 할 때
  * @return check 
  */
 async function postUserSignUp(user) {
-    const {id, name, password, nickname, age, comment, location, gender, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, favor, school, major, kakao} = user;
-    if(!id || !name || !password || !nickname || !age || !comment || !location || !gender || !selectGender || !selectMinAge || !selectMaxAge || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
+    const {id, name, password, nickname, comment, location, preferGenre, attractPoint, favor, school, major, kakao} = user;
+    if(!id || !name || !password || !nickname || !comment || !location || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
         return -1;
     }
     

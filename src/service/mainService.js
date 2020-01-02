@@ -72,7 +72,6 @@ async function getMain(userIdx) {
         }
         
         if(duplicationMovieValue == reserveMovie[i].movieIdx){  // duplication value checking
-            console.log(i)
             continue;
         } else {
             movieData = {   // movieData initialization
@@ -89,16 +88,6 @@ async function getMain(userIdx) {
             allData.reserveMovie.push(movieData);
         }
     }
-
-    for(var i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
-        for(var j = i + 1; j < allData.reserveMovie.length; j++) {
-            if(JSON.stringify(allData.reserveMovie[i]) === JSON.stringify(allData.reserveMovie[j])) {
-                allData.reserveMovie.splice(j, 1);
-            }
-        }
-    }
-
-    // console.log(allData.reserveMovie)
 
     const dateLength = Object.keys(reserveDate) // idx.length
     let duplicationDateValue = reserveDate[0].reservationDate;  // 중복확인 value
@@ -133,6 +122,38 @@ async function getMain(userIdx) {
                 allData.reserveDate.push(dateData);
             }
         }
+
+        let timeFilterArr = dateData.reservationTime.filter((item, idx, array) =>{
+            return array.indexOf(item) === idx;
+        });
+
+        dateData.reservationTime.splice(0,dateData.reservationTime.length); // 배열 초기화
+
+        for(let i = 0; i<timeFilterArr.length; i++){
+            dateData.reservationTime[i] = timeFilterArr[i]
+        }
+
+        for(let i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
+            for(let j = i + 1; j < allData.reserveMovie.length; j++) {
+                if(JSON.stringify(allData.reserveMovie[i].movieIdx) === JSON.stringify(allData.reserveMovie[j].movieIdx)) {
+                    allData.reserveMovie.splice(j, 1);
+                }
+            }
+        }
+        for(let i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
+            for(let j = i + 1; j < allData.reserveMovie.length ; j++) {
+                if(JSON.stringify(allData.reserveMovie[i].movieIdx) === JSON.stringify(allData.reserveMovie[j].movieIdx)) {
+                    allData.reserveMovie.splice(j, 1);
+                }
+            }
+        }
+        for(let i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
+            for(let j = i + 1; j < allData.reserveMovie.length ; j++) {
+                if(JSON.stringify(allData.reserveMovie[i].movieIdx) === JSON.stringify(allData.reserveMovie[j].movieIdx)) {
+                    allData.reserveMovie.splice(j, 1);
+                }
+            }   
+        }  
     return allData;
 }
 
