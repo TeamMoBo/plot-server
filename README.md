@@ -39,17 +39,37 @@
 
 
 
-## Depenedncy
+## Depenedncy Module
+사용 패키지(모듈)은 다음과 같습니다.
+
+* crypto : 패스워드 암호화 및 인증
+* express : 웹,서버 개발 프레임워크
+* 
+*
+*
+*
+*
+*
 
 ```json
 {
   "dependencies": {
+    "aws-sdk": "^2.596.0",
     "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.1",
+    "firebase-admin": "^8.9.0",
     "http-errors": "~1.6.3",
+    "jade": "^1.11.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
     "morgan": "~1.9.1",
-    "promise-mysql": "^4.1.1"
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
+    "promise-mysql": "^4.1.1",
+    "pug": "^2.0.4"
   }
 }
 ```
@@ -93,7 +113,6 @@ npm start
 * [AWS EC2](https://aws.amazon.com/ko/ec2/?sc_channel=PS&sc_campaign=acquisition_KR&sc_publisher=google&sc_medium=english_ec2_b&sc_content=ec2_e&sc_detail=awsec2&sc_category=ec2&sc_segment=177228231544&sc_matchtype=e&sc_country=KR&s_kwcid=AL!4422!3!177228231544!e!!g!!awsec2&ef_id=WkRozwAAAnO-lPWy:20180412120123:s) - 클라우드 환경 컴퓨팅 시스템
 * [AWS RDS](https://aws.amazon.com/ko/rds/) - 클라우드 환경 데이터베이스 관리 시스템
 * [AWS S3](https://aws.amazon.com/ko/s3/?sc_channel=PS&sc_campaign=acquisition_KR&sc_publisher=google&sc_medium=english_s3_b&sc_content=s3_e&sc_detail=awss3&sc_category=s3&sc_segment=177211245240&sc_matchtype=e&sc_country=KR&s_kwcid=AL!4422!3!177211245240!e!!g!!awss3&ef_id=WkRozwAAAnO-lPWy:20180412120059:s) - 클라우드 환경 데이터 저장소
-
 
 
 ## 사용된 도구 
