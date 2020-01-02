@@ -17,7 +17,7 @@ async function insertFbUser(userIdx) {
     
     const parsedUserData = {
         profileImageUrl : userData[0].userImg,
-        uid : uid.substring(0,30),
+        uid : uid.replaceAll('/', '').substring(0,30),
         userName : userData[0].userName
     }
 
