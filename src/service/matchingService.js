@@ -435,6 +435,7 @@ async function getMatchingInfoPage(token, matchingIdx) {
         kakaotalk : opponentUserData[0].userKakao,
         img : opponentUserData[0].userImg,
         movieTitle : movieTitle[0].movieName,
+        date : moment(matchingData[0].matchingDate).format('YYYY-MM-DD')
     }
 
     return matchingParsed;
