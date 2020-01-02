@@ -1,8 +1,18 @@
 const mysql = require('../library/mysql');
 
+async function selectMyMatchingByUseridx(userIdx) {
+    const selectQuery = `SELECT * FROM matching WHERE (userLeftIdx = ? OR userRightIdx = ?) ORDER BY matchingIdx DESC`
+    return await mysql.query(selectQuery, [userIdx, userIdx]);
+}
+
 async function selectMatchingByUseridx(userIdx, nowaDay) {
     const selectQuery = `SELECT * FROM matching WHERE (userLeftIdx = ? OR userRightIdx = ?) AND (matchingDate = ?) ORDER BY matchingIdx DESC`
     return await mysql.query(selectQuery, [userIdx, userIdx, nowaDay]);
+}
+
+async function selectMatchingByMatchingIdx(matchingIdx) {
+    const selectQuery = `SELECT * FROM matching WHERE matchingIdx = ?`;
+    return await mysql.query(selectQuery, [matchingIdx]);
 }
 
 async function updateLeftStateByMatchingIdx(matchingIdx, reply){
@@ -27,8 +37,10 @@ async function deleteAllMatching(nowaDay) {
 
 module.exports = {
     selectMatchingByUseridx,
+    selectMatchingByMatchingIdx,
     updateLeftStateByMatchingIdx,
     updateRightStateByMatchingIdx,
     insertMatching,
-    deleteAllMatching
+    deleteAllMatching,
+    selectMyMatchingByUseridx
 }
