@@ -54,10 +54,13 @@ async function postUserSignIn(user) {
  */
 async function postUserSignUp(user) {
     const {id, name, password, nickname, comment, location, preferGenre, attractPoint, favor, school, major, kakao} = user;
+    console.log(user);
     if(!id || !name || !password || !nickname || !comment || !location || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
         return -1;
     }
+
     
+
     const alreadyUser = await userDao.selectUserById(user);
     if (!(alreadyUser.length <= 0)) {
         return -2;
