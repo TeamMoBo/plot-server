@@ -16,12 +16,12 @@ const reservationDao = require("../dao/reservationDao");
  * 
  * @param  token 유저 토큰 
  */
-function findOpponentIdx(matchingArr, userIdx) {
+function findOpponentIdx(matchingRow, userIdx) {
     let opponentIdx;
-    if (matchingArr[0].userLeftIdx == userIdx) {
-        opponentIdx = matchingArr[0].userRightIdx;
-    } else if (matchingArr[0].userRightIdx == userIdx) {
-        opponentIdx = matchingArr[0].userLeftIdx;
+    if (matchingRow.userLeftIdx == userIdx) {
+        opponentIdx = matchingRow.userRightIdx;
+    } else if (matchingRow.userRightIdx == userIdx) {
+        opponentIdx = matchingRow.userLeftIdx;
     }
 
     return opponentIdx;
@@ -40,7 +40,7 @@ async function getMatching(token) {
     }
 
     //상대방 정보 받아오기
-    const opponentUserIdx = findOpponentIdx(userMatchingData, userIdx);
+    const opponentUserIdx = findOpponentIdx(userMatchingData[0], userIdx);
     console.log(opponentUserIdx);
     const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
 
@@ -366,14 +366,79 @@ async function deleteMatchingAlgorithm() {
     await matchingDao.deleteAllMatching(nowadays);
 }
 
-// async function getMatchingInfo() {
+async function getMatchingInfo(token) {
+    
+    if(verify(token) < 0) {
+        return -1;
+    }
+    const userIdx = verify(token).idx;
+    const matchingResult = await matchingDao.selectMyMatchingByUseridx(userIdx);
+    
+    let matchingObject = [];
 
-// }
+    await Promise.all(matchingResult.map(async matching => {
+        if(matching.matchingLeftState == 3 && matching.matchingRightState == 3) {
+            
+            const opponentUserIdx = findOpponentIdx(matching, userIdx);
+            const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+            
+            const matchingMovieData = await movieDao.selectMovieNameByMovieIdx(matching.movieIdx);
+            const matchingState = String(moment().format('YYYY-MM-DD')) <= String(matching.matchingDate)
+            
+            const matchingParsed = {
+                matchingIdx : matching.matchingIdx,
+                name : opponentUserData[0].userName,
+                age : opponentUserData[0].userAge,
+                kakaotalk : opponentUserData[0].userKakao,
+                img : opponentUserData[0].userImg,
+                movieTitle : matchingMovieData[0].movieName,
+                state : matchingState,
+                date : String(moment(matching.matchingDate).format('YYYY-MM-DD')),
+            }
 
-// async function getMatchingInfoPage() {
+            matchingObject.push(matchingParsed);
+        }
+    }))
 
-// }
+    return matchingObject;
+}
 
+async function getMatchingInfoPage(token, matchingIdx) {
+    if(verify(token) < 0) {
+        return -1;
+    }
+    else if(matchingIdx == undefined) {
+        return -2;
+    }
+    
+    const userIdx = verify(token).idx;
+    const matchingData = await matchingDao.selectMatchingByMatchingIdx(matchingIdx);
+
+    const opponentUserIdx = findOpponentIdx(matchingData[0], userIdx)
+    const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+    
+    const opponentHashTag = await hashTagDao.selectCharmingTagByUseridx(userIdx);
+
+    let hashList = [];
+    await Promise.all(opponentHashTag.map((hashtag) => {
+        hashList.push(hashtag.attractPointTagName);
+    }))
+
+    const movieTitle = await movieDao.selectMovieNameByMovieIdx(matchingData[0].movieIdx);
+
+    const matchingParsed = {
+        name : opponentUserData[0].userName,
+        comment : opponentUserData[0].userComment,
+        hashtTag : hashList,
+        school : opponentUserData[0].userSchool,
+        location : opponentUserData[0].userLocation,
+        kakaotalk : opponentUserData[0].userKakao,
+        img : opponentUserData[0].userImg,
+        movieTitle : movieTitle[0].movieName,
+    }
+
+    return matchingParsed;
+}
 
 module.exports = {
     getMatching,
@@ -381,5 +446,7 @@ module.exports = {
     postMatchingDecision,
     getMatchingAddress,
     matchingAlgorithm,
-    deleteMatchingAlgorithm
+    deleteMatchingAlgorithm,
+    getMatchingInfo,
+    getMatchingInfoPage
 }
