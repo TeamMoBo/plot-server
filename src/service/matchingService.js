@@ -365,6 +365,15 @@ async function deleteMatchingAlgorithm() {
     await matchingDao.deleteAllMatching(nowadays);
 }
 
+// async function getMatchingInfo() {
+
+// }
+
+// async function getMatchingInfoPage() {
+
+// }
+
+
 module.exports = {
     getMatching,
     postMatchingConfirm,

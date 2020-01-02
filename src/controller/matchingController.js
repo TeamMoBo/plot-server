@@ -128,9 +128,45 @@ async function deleteMatchingAlgorithm(req, res) {
         response(res, returnCode.OK, '매칭 삭제', matchingResult);
     } catch(error) {
         console.log(error);
-        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오444444류');
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
     }
 }
+
+async function getMatchingInfo(req, res) {
+    try {
+        const matchingResult;
+        if(matchingResult == -1) {
+            console.log('토큰 오류');
+            errResponse(res, returnCode.UNAUTHORIZED, '토큰 오류');
+        } else {
+            console.log('매칭 이력 조회 성공');
+            response(res, returnCode.OK, '매칭 이력 조회 성공', matchingResult);
+        }
+    } catch(error) {
+        console.log(error);
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
+    }
+}
+
+async function getMatchingInfoPage(req, res) {
+    try {
+        const matchingResult;
+        if(matchingResult == -1) {
+            console.log('토큰 오류');
+            errResponse(res, returnCode.UNAUTHORIZED, '토큰 오류');
+        } else if(matchingResult == -2) {
+            console.log('파라미터 오류');
+            errResponse(res, returnCode.BAD_REQUEST, '파라미터 오류');
+        } else {
+            console.log('매칭 이력 페이지 조회 성공');
+            response(res, returnCode.OK, '매칭 이력 페이지 조회 성공', matchingResult);
+        }
+    } catch(error) {
+        console.log(error);
+        errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
+    }
+}
+
 
 module.exports = {
     getMatching,
@@ -138,5 +174,7 @@ module.exports = {
     postMatchingDecision,
     getMatchingAddress,
     matchingAlgorithm,
-    deleteMatchingAlgorithm
+    deleteMatchingAlgorithm,
+    getMatchingInfo,
+    getMatchingInfoPage
 }
