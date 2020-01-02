@@ -46,15 +46,15 @@ async function postUserSignIn(user) {
 /**
  * 회원가입
  * 
- * @param {id, name, password, nickname, age, image, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, myLikes, school, major, kakao} user 유저 정보
+ * @param {id, name, password, nickname, age, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, myLikes, school, major, kakao} user 유저 정보
  * 
  * @return -1 데이터가 부족할 때
  * @return -2 아이디가 존재 할 때
  * @return check 
  */
 async function postUserSignUp(user) {
-    const {id, name, password, nickname, age, comment, location, selectGender, selectMinAge, selectMaxAge, preferGenre, attractPoint, favor, school, major, kakao} = user;
-    if(!id || !name || !password || !nickname || !age || !comment || !location || !selectGender || !selectMinAge || !selectMaxAge || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
+    const {id, name, password, nickname, comment, location, preferGenre, attractPoint, favor, school, major, kakao} = user;
+    if(!id || !name || !password || !nickname || !comment || !location || !preferGenre || !attractPoint || !favor || !school || !major || !kakao) {
         return -1;
     }
     
@@ -74,12 +74,14 @@ async function postUserSignUp(user) {
     const check = await userDao.insertUser(encryptedUser);
 
     const users = await userDao.selectUserById(user);
-    const userIdx =users[0].userIdx;
+    const userIdx =users[0].userIdx;    
     
-    const arrayPreferGenre = preferGenre.split(',');
-    const arrayAttractPoint = attractPoint.split(',');
-    const arrayFavor = favor.split(',');
-
+    const arrayPreferGenre = preferGenre.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    const arrayAttractPoint = attractPoint.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    const arrayFavor = favor.split('#').map(it => it.trim()).filter(word => word.length > 0);
+    // console.log(arrayPreferGenre);
+    // console.log(arrayAttractPoint);
+    // console.log(arrayFavor);
     var hashtag = "preferGenreTag";
     await insertHashTag(arrayPreferGenre, userIdx, hashtag);
     var hashtag = "attractPointTag";
