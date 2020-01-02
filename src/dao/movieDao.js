@@ -72,6 +72,13 @@ async function updateReservationTime(reservationTime, reservationIdx) {
   ]);
 }
 
+
+async function selectMovieNameByMovieIdx(movieIdx) {
+  const selectQuery = `SELECT movieName FROM movie WHERE movieIdx = ?`;
+  return await mysql.query(selectQuery, [movieIdx]);
+}
+
+
 module.exports = {
   selectCurrentMovie,
   selectFutureMovie,
@@ -85,5 +92,7 @@ module.exports = {
 
   updateReservation,
   updateReservationMovie,
-  updateReservationTime
+  updateReservationTime,
+
+  selectMovieNameByMovieIdx
 };
