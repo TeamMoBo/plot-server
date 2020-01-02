@@ -39,8 +39,6 @@ async function getMatching(token) {
         return -1;
     }
 
-
-
     //상대방 정보 받아오기
     const opponentUserIdx = findOpponentIdx(userMatchingData, userIdx);
     console.log(opponentUserIdx);
@@ -89,6 +87,11 @@ async function postMatchingConfirm(token, reply) {
     }
 
     const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+
+    if(userMatchingData == 0){
+        return -5;
+    }
+
     let matchingIdx = userMatchingData[0].matchingIdx;
     console.log(userMatchingData[0]);
     if (userMatchingData[0].userLeftIdx == userIdx) {
@@ -125,7 +128,7 @@ async function postMatchingDecision(token, decision) {
     if(userMatchingData == 0){
         return -5;
     }
-    
+
     let matchingIdx = userMatchingData[0].matchingIdx;
 
     if (userMatchingData[0].userLeftIdx == userIdx) {

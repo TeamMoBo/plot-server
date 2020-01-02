@@ -48,6 +48,9 @@ async function postMatchingConfirm(req, res) {
         } else if(matchingResult == -4){
             console.log('요청 양식 오류');
             response(res, returnCode.BAD_REQUEST, '요청 양식 오류');    
+        } else if(matchingResult == -5){
+            console.log('매칭이 존재하지 않을 경우');
+            response(res, returnCode.BAD_REQUEST, '매칭이 존재하지 않습니다');
         } else {
             console.log('매칭 승인');
             response(res, returnCode.OK, '매칭 승인');
