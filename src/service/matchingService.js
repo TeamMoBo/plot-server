@@ -360,10 +360,20 @@ async function matchingAlgorithm() {
 }
 
 async function deleteMatchingAlgorithm() {
-    let nowadays = String(moment().format('YYYY-MM-DD'));
+    let nowadays = moment().format('YYYY-MM-DD');
+    await reservationDao.deleteAllReservation(nowadays);
     await chatRoomDao.deleteAllChatRoom();
     await matchingDao.deleteAllMatching(nowadays);
 }
+
+// async function getMatchingInfo() {
+
+// }
+
+// async function getMatchingInfoPage() {
+
+// }
+
 
 module.exports = {
     getMatching,
