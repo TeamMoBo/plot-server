@@ -9,7 +9,7 @@ async function getMain(userIdx) {
     const randMovie = await mainDao.selectMainMovie();  // 랜덤영화정보
     const reserveMovie = await mainDao.selectMainReserveMovie(userIdx); // 영화정보
     const reserveDate = await mainDao.selectMainReserveDate(userIdx);   // 영화시간정보
-    const matchingData = await mainDao.selectMatchingState(userIdx);
+    const matchingData = await mainDao.selectMatchingState(userIdx);    // 매칭상태
     
     const allData = {
         "userIdx" : 0,
@@ -19,7 +19,7 @@ async function getMain(userIdx) {
         "reserveDate" : [],
     }
 
-    allData.userIdx = reserveMovie[0].userIdx;
+    allData.userIdx = userIdx;
 
     /* 
     매칭 상태
@@ -45,9 +45,14 @@ async function getMain(userIdx) {
             randomData["movieName"] = randMovie[i].movieName;
             randomData["movieScore"] = randMovie[i].movieScore;
             randomData["movieRuntime"] = randMovie[i].movieRunTime;
-            randomData["movieGenre"] = randMovie[i].movieGenre
+            randomData["movieGenre"] = randMovie[i].movieGenre;
+            randomData["movieURL"] = randMovie[i].movieURL;
 
             allData.randMovie.push(randomData);
+    }
+
+    if(!reserveMovie == 0 || !reserveDate == 0){    //  예약이 존재하지 않을 경우
+        return allData;
     }
 
     const movieLength = Object.keys(reserveMovie);
@@ -127,12 +132,14 @@ async function getMain(userIdx) {
             return array.indexOf(item) === idx;
         });
 
-        dateData.reservationTime.splice(0,dateData.reservationTime.length); // 배열 초기화
+        dateData.reservationTime.splice(0,dateData.reservationTime.length); // 배열 초기
 
         for(let i = 0; i<timeFilterArr.length; i++){
             dateData.reservationTime[i] = timeFilterArr[i]
         }
 
+        dateData.reservationTime.sort(function(a, b) {return a-b}); // 오름차순 정렬
+        
         for(let i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
             for(let j = i + 1; j < allData.reserveMovie.length; j++) {
                 if(JSON.stringify(allData.reserveMovie[i].movieIdx) === JSON.stringify(allData.reserveMovie[j].movieIdx)) {
@@ -153,7 +160,7 @@ async function getMain(userIdx) {
                     allData.reserveMovie.splice(j, 1);
                 }
             }   
-        }  
+        }
     return allData;
 }
 
