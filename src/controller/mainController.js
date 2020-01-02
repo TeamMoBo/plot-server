@@ -23,7 +23,7 @@ async function getMain(req, res) {
         response(res, returnCode.OK, '메인화면 조회 성공', main);
 
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');
     }
 }

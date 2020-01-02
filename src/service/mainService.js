@@ -51,7 +51,10 @@ async function getMain(userIdx) {
             allData.randMovie.push(randomData);
     }
 
-    if(!reserveMovie == 0 || !reserveDate == 0){    //  예약이 존재하지 않을 경우
+    console.log(reserveMovie);
+    console.log(reserveDate);
+
+    if(reserveMovie.length == 0 || reserveDate.length == 0){    //  예약이 존재하지 않을 경우
         return allData;
     }
 
