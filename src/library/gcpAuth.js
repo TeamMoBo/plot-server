@@ -1,10 +1,10 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("../../config/my-project-1511976542359-firebase-adminsdk-4fifw-13d6e5c087.json");
+var serviceAccount = require("../../config/mobo-6f428-firebase-adminsdk-fvmux-ed71fe1b4d.json");
 
 admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://my-project-1511976542359.firebaseio.com"
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://mobo-6f428.firebaseio.com"
 });
 
 // var serviceAccount = require("../../config/google-services.json");
