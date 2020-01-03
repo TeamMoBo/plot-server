@@ -58,17 +58,18 @@ async function getReserveMovie(userIdx) {
     const selectMovieResult = await movieDao.selectMovieReserveMovie(userIdx);
     const selectTimeResult = await movieDao.selectMovieReserveDate(userIdx);
 
+    console.log(selectMovieResult)
+    // console.log(selectTimeResult)
+
     const movieData = {
         "reservationIdx" : 0,
         "userIdx" : 0,
         "movieIdx" : [],
-        "reservationDate" : "",
-        "reservationTime" : []
+        "reserveInfo" : []
     };
         
     movieData.reservationIdx = selectMovieResult[0].reservationIdx;
     movieData.userIdx = userIdx;
-    movieData.reservationDate = selectTimeResult[0].reservationDate;
 
     // movie filtering
     let movieLength = Object.keys(selectMovieResult);
@@ -86,22 +87,55 @@ async function getReserveMovie(userIdx) {
         movieData.movieIdx.push(movieFilterArr[i])
     }
 
+    const dateLength = Object.keys(selectTimeResult) // idx.length
+    let duplicationDateValue = selectTimeResult[0].reservationDate;  // 중복확인 value
+    let duplicationTimeValue = selectTimeResult[0].reservationTime;
+
+    let dateData = {
+        "reservationDate" : "",
+        "reservationTime" : []
+    };
+
+    for(let i = 0; i<dateLength.length; i++){
+        if(i == 0){
+            dateData.reservationDate = selectTimeResult[0].reservationDate;
+            dateData.reservationTime.push(selectTimeResult[0].reservationTime);
+            movieData.reserveInfo.push(dateData);
+            continue;
+        }
+
+        if(selectTimeResult[i].reservationDate == duplicationDateValue){ // 중복확인, 중복일 경우
+            if(duplicationTimeValue != selectTimeResult[i].reservationTime){
+                dateData.reservationTime.push(selectTimeResult[i].reservationTime)   // time push
+                duplicationTimeValue = selectTimeResult[i].reservationTime;
+            }
+        } else {    // 중복이 아닐 경우, reservationDate new value
+            dateData = {    // dateData Initialization
+                "reservationDate" : "",
+                "reservationTime" : []
+            }
+            dateData.reservationDate = selectTimeResult[i].reservationDate;
+            duplicationDateValue = selectTimeResult[i].reservationDate;
+            movieData.reserveInfo.push(dateData);
+        }
+    }
+
 
     // time filtering
-    let timeLength = Object.keys(selectTimeResult);
-    let timeArr = [];
+    // let timeLength = Object.keys(selectTimeResult);
+    // let timeArr = [];
 
-    for(let j = 0; j<timeLength.length; j++){
-        timeArr.push(selectTimeResult[j].reservationTime);
-    }
+    // for(let j = 0; j<timeLength.length; j++){
+    //     timeArr.push(selectTimeResult[j].reservationTime);
+    // }
 
-    let timeFilterArr = timeArr.filter((item, idx, array) =>{
-        return array.indexOf(item) === idx;
-    });
+    // let timeFilterArr = timeArr.filter((item, idx, array) =>{
+    //     return array.indexOf(item) === idx;
+    // });
 
-    for (let j = 0; j<timeFilterArr.length; j++){
-        movieData.reservationTime.push(timeFilterArr[j])
-    }
+    // for (let j = 0; j<timeFilterArr.length; j++){
+    //     movieData.reservationTime.push(timeFilterArr[j])
+    // }
     return movieData;
 }
 
@@ -161,7 +195,7 @@ async function putMovie(userIdx, movieData) {
     }
 
     // body가 더 많을경우 INSERT도 해야함,, 없으면 DELETE? UPDATE = 0?
-    
+
     const idxLength = Object.keys(movieData.movieIdx);
     const timeLength = Object.keys(movieData.reservationTime);
     
