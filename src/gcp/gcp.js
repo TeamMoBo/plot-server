@@ -13,11 +13,11 @@ async function insertFbUser(userIdx) {
     // const userIdx = 30;
     // console.log(userIdx);
     const userData = await userDao.selectUserByIdx(userIdx);
-    const uid = await encryption.notSaltEncrypt(userData[0].userId, hashingSalt);
+    let uid = await encryption.notSaltEncrypt(userData[0].userId, hashingSalt);
     
     const parsedUserData = {
         profileImageUrl : userData[0].userImg,
-        uid : uid.substring(0,30),
+        uid : uid.replace(/\//gi, '').substring(0,30),
         userName : userData[0].userName
     }
 
@@ -45,7 +45,7 @@ async function makeChatRoom(leftUserIdx, rightUserIdx) {
     const leftUid = await encryption.notSaltEncrypt(userLeftData[0].userId, hashingSalt);
     const rightUid = await encryption.notSaltEncrypt(userRightData[0].userId, hashingSalt);
     
-    const chatRoomId = moment().format('x') + leftUid.substring(0,5) + rightUid.substring(0,5);
+    const chatRoomId = moment().format('x') + leftUid.replace(/\//gi, '').substring(0,5) + rightUid.replace(/\//gi, '').substring(0,5);
     return chatRoomId;
 }
 

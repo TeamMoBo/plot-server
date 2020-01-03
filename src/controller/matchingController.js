@@ -103,9 +103,10 @@ async function getMatchingAddress(req, res) {
         } else if(matchingResult == - 4){   // 오늘 날짜의 매칭이 없거나 userIdx가 매칭되지 않았을 경우
             console.log('매칭이 존재하지 않습니다');
             errResponse(res, returnCode.BAD_REQUEST, '매칭이 존재하지 않습니다');
-        }
+        } else {
             console.log('주소 요청 성공');
             response(res, returnCode.OK, '주소 요청 성공', matchingResult);
+        }
     } catch (error) {
         console.log(error);
         errResponse(res, returnCode.INTERNAL_SERVER_ERROR, '서버 오류');

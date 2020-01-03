@@ -129,9 +129,9 @@ npm start
 ## 개발자
 
 * [이상윤](https://github.com/syndersonLEE)
-* [양희연]()
+* [양희연](https://github.com/hhiyeon)
 * [이다현](https://github.com/leeda66)
-* [이재용]()
+* [이재용](https://github.com/jaeyong136)
 
 
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
