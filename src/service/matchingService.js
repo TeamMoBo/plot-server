@@ -16,12 +16,12 @@ const reservationDao = require("../dao/reservationDao");
  * 
  * @param  token 유저 토큰 
  */
-function findOpponentIdx(matchingArr, userIdx) {
+function findOpponentIdx(matchingRow, userIdx) {
     let opponentIdx;
-    if (matchingArr[0].userLeftIdx == userIdx) {
-        opponentIdx = matchingArr[0].userRightIdx;
-    } else if (matchingArr[0].userRightIdx == userIdx) {
-        opponentIdx = matchingArr[0].userLeftIdx;
+    if (matchingRow.userLeftIdx == userIdx) {
+        opponentIdx = matchingRow.userRightIdx;
+    } else if (matchingRow.userRightIdx == userIdx) {
+        opponentIdx = matchingRow.userLeftIdx;
     }
 
     return opponentIdx;
@@ -39,10 +39,8 @@ async function getMatching(token) {
         return -1;
     }
 
-
-
     //상대방 정보 받아오기
-    const opponentUserIdx = findOpponentIdx(userMatchingData, userIdx);
+    const opponentUserIdx = findOpponentIdx(userMatchingData[0], userIdx);
     console.log(opponentUserIdx);
     const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
 
@@ -89,6 +87,11 @@ async function postMatchingConfirm(token, reply) {
     }
 
     const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+
+    if(userMatchingData == 0){
+        return -5;
+    }
+
     let matchingIdx = userMatchingData[0].matchingIdx;
     console.log(userMatchingData[0]);
     if (userMatchingData[0].userLeftIdx == userIdx) {
@@ -120,8 +123,14 @@ async function postMatchingDecision(token, decision) {
         return -4;
     }
 
-    const userMatchingData = await matchingDao.selectMatchingByUseridx(userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+    const userMatchingData = await matchingDao.selectMatchingByUseridx(userData[0].userIdx, moment().format('YYYY-MM-DD')); //시간대 + 상태 확인 안
+
+    if(userMatchingData == 0){
+        return -5;
+    }
+
     let matchingIdx = userMatchingData[0].matchingIdx;
+
     if (userMatchingData[0].userLeftIdx == userIdx) {
         if (decision == true) {
             await matchingDao.updateLeftStateByMatchingIdx(matchingIdx, 3);
@@ -149,6 +158,15 @@ async function getMatchingAddress(token) {
     }
 
     const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx, moment().format('YYYY-MM-DD'));
+    console.log(matchingData[0]);
+
+    const opponentUserIdx = findOpponentIdx(matchingData[0],verifyToken.idx);
+    const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+
+    console.log(opponentUserData);
+    if(matchingData.length == 0){ 
+        return -4;;
+    }
 
     // if(!(matchingData[0].matchingLeftState == 2 && matchingData[0].matchingRightState == 2)) {
     //     return -3;
@@ -158,6 +176,8 @@ async function getMatchingAddress(token) {
     const uid = await gcp.insertFbUser(verifyToken.idx);
 
     let chatroomObject = {
+        opponentName : opponentUserData[0].userName,
+        opponentImg : opponentUserData[0].userImg,
         uid: uid
     }
     if (chatRoomData.length == 0) {
@@ -331,7 +351,7 @@ async function matchingAlgorithm() {
     let matchingResult = await randomMatching(maleUser, femaleUser);
     
     console.log(matchingResult);
-    
+
     await Promise.all(matchingResult.map(async (finalMatchingUser) => {
         const insertDto = {
             leftUserIdx : finalMatchingUser.leftUser.userIdx,
@@ -347,9 +367,86 @@ async function matchingAlgorithm() {
 }
 
 async function deleteMatchingAlgorithm() {
-    let nowadays = String(moment().format('YYYY-MM-DD'));
+    let nowadays = moment().format('YYYY-MM-DD');
+    await reservationDao.deleteAllReservation(nowadays);
     await chatRoomDao.deleteAllChatRoom();
     await matchingDao.deleteAllMatching(nowadays);
+}
+
+async function getMatchingInfo(token) {
+    
+    if(verify(token) < 0) {
+        return -1;
+    }
+    const userIdx = verify(token).idx;
+    const matchingResult = await matchingDao.selectMyMatchingByUseridx(userIdx);
+    
+    let matchingObject = [];
+
+    await Promise.all(matchingResult.map(async matching => {
+        if((matching.matchingLeftState == 3 || matching.matchingRightState == 3) && 
+        (matching.matchingLeftState != 0 && matching.matchingRightState != 0)) {
+            
+            const opponentUserIdx = findOpponentIdx(matching, userIdx);
+            const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+            
+            const matchingMovieData = await movieDao.selectMovieNameByMovieIdx(matching.movieIdx);
+            const matchingState = String(moment().format('YYYY-MM-DD')) <= String(matching.matchingDate)
+            
+            const matchingParsed = {
+                matchingIdx : matching.matchingIdx,
+                name : opponentUserData[0].userName,
+                age : opponentUserData[0].userAge,
+                kakaotalk : opponentUserData[0].userKakao,
+                img : opponentUserData[0].userImg,
+                movieTitle : matchingMovieData[0].movieName,
+                state : matchingState,
+                date : String(moment(matching.matchingDate).format('YYYY-MM-DD')),
+            }
+
+            matchingObject.push(matchingParsed);
+        }
+    }))
+
+    return matchingObject;
+}
+
+async function getMatchingInfoPage(token, matchingIdx) {
+    if(verify(token) < 0) {
+        return -1;
+    }
+    else if(matchingIdx == undefined) {
+        return -2;
+    }
+    
+    const userIdx = verify(token).idx;
+    const matchingData = await matchingDao.selectMatchingByMatchingIdx(matchingIdx);
+
+    const opponentUserIdx = findOpponentIdx(matchingData[0], userIdx)
+    const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+    
+    const opponentHashTag = await hashTagDao.selectCharmingTagByUseridx(userIdx);
+
+    let hashList = [];
+    await Promise.all(opponentHashTag.map((hashtag) => {
+        hashList.push(hashtag.attractPointTagName);
+    }))
+
+    const movieTitle = await movieDao.selectMovieNameByMovieIdx(matchingData[0].movieIdx);
+
+    const matchingParsed = {
+        name : opponentUserData[0].userName,
+        comment : opponentUserData[0].userComment,
+        hashtTag : hashList,
+        school : opponentUserData[0].userSchool,
+        location : opponentUserData[0].userLocation,
+        kakaotalk : opponentUserData[0].userKakao,
+        img : opponentUserData[0].userImg,
+        movieTitle : movieTitle[0].movieName,
+        date : moment(matchingData[0].matchingDate).format('YYYY-MM-DD')
+    }
+
+    return matchingParsed;
 }
 
 module.exports = {
@@ -358,5 +455,7 @@ module.exports = {
     postMatchingDecision,
     getMatchingAddress,
     matchingAlgorithm,
-    deleteMatchingAlgorithm
+    deleteMatchingAlgorithm,
+    getMatchingInfo,
+    getMatchingInfoPage
 }

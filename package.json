@@ -8,6 +8,7 @@
   "dependencies": {
     "aws-sdk": "^2.596.0",
     "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "express": "^4.16.4",
     "express-generator": "^4.16.1",
