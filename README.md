@@ -25,6 +25,8 @@
 
 ![workflow](https://user-images.githubusercontent.com/30704569/71724029-24fe0c80-2e72-11ea-9b61-a2b0ca8edd85.png)
 
+## 핵심 기능
+
 ### 매칭 알고리즘
 
 > 최다 매칭을 위하여 이분 매칭 알고리즘을 이용하였습니다
@@ -35,6 +37,17 @@
 >
 > ![algorithm](https://user-images.githubusercontent.com/30704569/71710762-2d8a1f00-2e41-11ea-8e54-50763ce263ea.png)
 
+### 채팅 서비스
+
+> 클라이언트와의 원활한 소통을 위해 Firebase RealTime Database를 이용한 채팅 서비스를 합니다<br><br/>
+> 사용할 쓰는 user의 아이디와 번호를 encryption을 통해 고유한 아이디를 전달합니다<br><br/>
+> 채팅방에 쓰이는 고유 번호는 timestamp + 각 유저의 해싱값을 통해 본인만 접근이 가능하도록 암호화 하였습니다.
+
+### 크롤링
+
+> 영화 정보를 KOBIS에서 제공하는 실시간 api와 영화 정보를 제공하는 api와 cheerio를 이용해 크롤링합니다. <br><br/>
+> 해당 크롤링 코드는 의존성을 줄이기 위해 Google Cloud Function을 이용하여 Google Cron 서비스로 매일 23시에 DB를 업데이트 합니다.<br><br/>
+> 해당 서버 리스 언어는 node 언어로 작성하였습니다.
 
 ## Architecture
 
@@ -125,10 +138,10 @@ npm start
 
 ## 개발자
 
-* [이상윤](https://github.com/syndersonLEE)
-* [양희연](https://github.com/hhiyeon)
-* [이다현](https://github.com/leeda66)
-* [이재용](https://github.com/jaeyong136)
+* [이상윤](https://github.com/syndersonLEE) - 채팅 + 매칭 관련 서비스 전반
+* [양희연](https://github.com/hhiyeon) - 메인 + 영화 선택 + 크롤링
+* [이다현](https://github.com/leeda66) - 개인 정보 관리 + 결제 페이지
+* [이재용](https://github.com/jaeyong136) - 로그인 / 회원가입 및 데이터 수집
 
 
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
