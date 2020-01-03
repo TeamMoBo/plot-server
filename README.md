@@ -30,7 +30,7 @@
 
 ## Architecture
 
-![architecture](https://user-images.githubusercontent.com/30704569/71709202-24954f80-2e39-11ea-866c-71194528860f.png)
+![architecture](https://user-images.githubusercontent.com/30704569/71710051-ad15ef00-2e3d-11ea-9a95-414fe8cee449.png)
 
 
 ## DB ERD
