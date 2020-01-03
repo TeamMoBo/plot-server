@@ -23,7 +23,7 @@
 ## Workflow
 
 
-![workflow](https://user-images.githubusercontent.com/46750574/71696597-c3e62280-2df8-11ea-8cf2-c1b5b1c29fb7.png)
+![workflow](https://user-images.githubusercontent.com/30704569/71724029-24fe0c80-2e72-11ea-9b61-a2b0ca8edd85.png)
 
 ### 매칭 알고리즘
 
@@ -134,7 +134,7 @@ npm start
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
 
 
-## MoBo의 연관 프로젝트
+## PLOT의 연관 프로젝트
 
 * [Android](https://github.com/TeamMoBo/mobo-android)
 * [iOS](https://github.com/TeamMoBo/MoboiOS)
