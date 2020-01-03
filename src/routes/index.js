@@ -7,5 +7,6 @@ router.use("/matching", require("./matching"));
 router.use("/movie", require("./movie"));
 router.use("/main", require("./main"));
 router.use("/payment", require("./payment"));
+router.use("/reservation", require("./reservation"));
 
 module.exports = router;
