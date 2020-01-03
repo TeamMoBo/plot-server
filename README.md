@@ -18,19 +18,40 @@
 
 '**Plot**'입니다.
 
-영화 친구 찾기로 가장한 소개팅 어플
+> 영화 친구 찾기로 가장한 소개팅 어플
 
 ## Workflow
 
 
-![workflow]() (미정)
+![workflow](https://user-images.githubusercontent.com/30704569/71724029-24fe0c80-2e72-11ea-9b61-a2b0ca8edd85.png)
 
+## 핵심 기능
 
+### 매칭 알고리즘
 
+> 최다 매칭을 위하여 이분 매칭 알고리즘을 이용하였습니다
+> <br></br>이분 매칭 알고리즘에 이용하기 위해 DFS를 이용하는 과정에서 랜덤 순서 & 필터링을 적용하여 최다 매칭이 여러 케이스 일 경우 다양한 경우의 수가 도출 됩니다
+> <br></br>간선을 연결 할 때는 완전 탐색을 이용하였습니다.
+> <br></br>필터링은 병렬로 계산하기 때문에 매칭은 O(E * V) / 간선 연결에 인원 수 만큼 걸리기 때문에 O(n^2)
+> <br></br>따라서 탐색 시간은 O (E * V * n^2) 가 나옵니다.
+>
+> ![algorithm](https://user-images.githubusercontent.com/30704569/71710762-2d8a1f00-2e41-11ea-8e54-50763ce263ea.png)
+
+### 채팅 서비스
+
+> 클라이언트와의 원활한 소통을 위해 Firebase RealTime Database를 이용한 채팅 서비스를 합니다<br><br/>
+> 사용할 쓰는 user의 아이디와 번호를 encryption을 통해 고유한 아이디를 전달합니다<br><br/>
+> 채팅방에 쓰이는 고유 번호는 timestamp + 각 유저의 해싱값을 통해 본인만 접근이 가능하도록 암호화 하였습니다.
+
+### 크롤링
+
+> 영화 정보를 KOBIS에서 제공하는 실시간 api와 영화 정보를 제공하는 api와 cheerio를 이용해 크롤링합니다. <br><br/>
+> 해당 크롤링 코드는 의존성을 줄이기 위해 Google Cloud Function을 이용하여 Google Cron 서비스로 매일 23시에 DB를 업데이트 합니다.<br><br/>
+> 해당 서버 리스 언어는 node 언어로 작성하였습니다.
 
 ## Architecture
 
-![architecture]() (미정)
+![architecture](https://user-images.githubusercontent.com/30704569/71710051-ad15ef00-2e3d-11ea-9a95-414fe8cee449.png)
 
 
 ## DB ERD
@@ -42,18 +63,8 @@
 ## Depenedncy Module
 사용 패키지(모듈)은 다음과 같습니다.
 
-* crypto : 패스워드 암호화 및 인증
-* express : 웹,서버 개발 프레임워크
-* 
-*
-*
-*
-*
-*
-
 ```json
-{
-  "dependencies": {
+"dependencies": {
     "aws-sdk": "^2.596.0",
     "cookie-parser": "~1.4.4",
     "crypto": "^1.0.1",
@@ -71,7 +82,6 @@
     "promise-mysql": "^4.1.1",
     "pug": "^2.0.4"
   }
-}
 ```
 
 
@@ -104,7 +114,7 @@ npm install
 npm start
 ```
 
-> localhost:3000으로 접속 가능합니다.
+> 13.125.48.35:7935 으로 접속 가능합니다.
 
 
 
@@ -128,16 +138,16 @@ npm start
 
 ## 개발자
 
-* [이상윤](https://github.com/syndersonLEE)
-* [양희연](https://github.com/hhiyeon)
-* [이다현](https://github.com/leeda66)
-* [이재용](https://github.com/jaeyong136)
+* [이상윤](https://github.com/syndersonLEE) - 채팅 + 매칭 관련 서비스 전반
+* [양희연](https://github.com/hhiyeon) - 메인 + 영화 선택 + 크롤링
+* [이다현](https://github.com/leeda66) - 개인 정보 관리 + 결제 페이지
+* [이재용](https://github.com/jaeyong136) - 로그인 / 회원가입 및 데이터 수집
 
 
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
 
 
-## MoBo의 연관 프로젝트
+## PLOT의 연관 프로젝트
 
 * [Android](https://github.com/TeamMoBo/mobo-android)
 * [iOS](https://github.com/TeamMoBo/MoboiOS)
