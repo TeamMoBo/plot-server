@@ -134,7 +134,7 @@ npm start
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
 
 
-## MoBo의 연관 프로젝트
+## PLOT의 연관 프로젝트
 
 * [Android](https://github.com/TeamMoBo/mobo-android)
 * [iOS](https://github.com/TeamMoBo/MoboiOS)
