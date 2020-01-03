@@ -18,19 +18,27 @@
 
 '**Plot**'입니다.
 
-영화 친구 찾기로 가장한 소개팅 어플
+> 영화 친구 찾기로 가장한 소개팅 어플
 
 ## Workflow
 
 
-![workflow]() (미정)
+![workflow](https://user-images.githubusercontent.com/46750574/71696597-c3e62280-2df8-11ea-8cf2-c1b5b1c29fb7.png)
 
+### 매칭 알고리즘
 
+> 최다 매칭을 위하여 이분 매칭 알고리즘을 이용하였습니다
+> <br></br>이분 매칭 알고리즘에 이용하기 위해 DFS를 이용하는 과정에서 랜덤 순서 & 필터링을 적용하여 최다 매칭이 여러 케이스 일 경우 다양한 경우의 수가 도출 됩니다
+> <br></br>간선을 연결 할 때는 완전 탐색을 이용하였습니다.
+> <br></br>필터링은 병렬로 계산하기 때문에 매칭은 O(E * V) / 간선 연결에 인원 수 만큼 걸리기 때문에 O(n^2)
+> <br></br>따라서 탐색 시간은 O (E * V * n^2) 가 나옵니다.
+>
+> ![algorithm](https://user-images.githubusercontent.com/30704569/71710762-2d8a1f00-2e41-11ea-8e54-50763ce263ea.png)
 
 
 ## Architecture
 
-![architecture]() (미정)
+![architecture](https://user-images.githubusercontent.com/30704569/71710051-ad15ef00-2e3d-11ea-9a95-414fe8cee449.png)
 
 
 ## DB ERD
@@ -42,18 +50,8 @@
 ## Depenedncy Module
 사용 패키지(모듈)은 다음과 같습니다.
 
-* crypto : 패스워드 암호화 및 인증
-* express : 웹,서버 개발 프레임워크
-* 
-*
-*
-*
-*
-*
-
 ```json
-{
-  "dependencies": {
+"dependencies": {
     "aws-sdk": "^2.596.0",
     "cookie-parser": "~1.4.4",
     "crypto": "^1.0.1",
@@ -71,7 +69,6 @@
     "promise-mysql": "^4.1.1",
     "pug": "^2.0.4"
   }
-}
 ```
 
 
@@ -104,7 +101,7 @@ npm install
 npm start
 ```
 
-> localhost:3000으로 접속 가능합니다.
+> 13.125.48.35:7935 으로 접속 가능합니다.
 
 
 
