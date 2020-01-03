@@ -158,7 +158,12 @@ async function getMatchingAddress(token) {
     }
 
     const matchingData = await matchingDao.selectMatchingByUseridx(verifyToken.idx, moment().format('YYYY-MM-DD'));
+    console.log(matchingData[0]);
 
+    const opponentUserIdx = findOpponentIdx(matchingData[0],verifyToken.idx);
+    const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
+
+    console.log(opponentUserData);
     if(matchingData.length == 0){ 
         return -4;;
     }
@@ -171,6 +176,8 @@ async function getMatchingAddress(token) {
     const uid = await gcp.insertFbUser(verifyToken.idx);
 
     let chatroomObject = {
+        opponentName : opponentUserData[0].userName,
+        opponentImg : opponentUserData[0].userImg,
         uid: uid
     }
     if (chatRoomData.length == 0) {
@@ -344,7 +351,7 @@ async function matchingAlgorithm() {
     let matchingResult = await randomMatching(maleUser, femaleUser);
     
     console.log(matchingResult);
-    
+
     await Promise.all(matchingResult.map(async (finalMatchingUser) => {
         const insertDto = {
             leftUserIdx : finalMatchingUser.leftUser.userIdx,
@@ -377,7 +384,8 @@ async function getMatchingInfo(token) {
     let matchingObject = [];
 
     await Promise.all(matchingResult.map(async matching => {
-        if(matching.matchingLeftState == 3 && matching.matchingRightState == 3) {
+        if((matching.matchingLeftState == 3 || matching.matchingRightState == 3) && 
+        (matching.matchingLeftState != 0 && matching.matchingRightState != 0)) {
             
             const opponentUserIdx = findOpponentIdx(matching, userIdx);
             const opponentUserData = await userDao.selectUserByIdx(opponentUserIdx);
