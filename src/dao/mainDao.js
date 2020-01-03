@@ -27,7 +27,7 @@ async function selectMainReserveMovie(userIdx) {    // 예매한 영화 조회
 
 async function selectMainReserveDate(userIdx) {    // 예매한 영화 시간조회
     const selectScheduleSql = `SELECT reservationDate, reservationTime, reservationWeekday 
-    FROM reservation JOIN reservationHour ON reservation.reservationIdx = reservationHour.reservationIdx WHERE userIdx = ?`;
+    FROM reservation JOIN reservationHour ON reservation.reservationIdx = reservationHour.reservationIdx WHERE userIdx = ? ORDER BY reservationDate ASC, reservationTime ASC`;
 
     return await mysql.query(selectScheduleSql, userIdx);
 }

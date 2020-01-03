@@ -51,9 +51,6 @@ async function getMain(userIdx) {
             allData.randMovie.push(randomData);
     }
 
-    console.log(reserveMovie);
-    console.log(reserveDate);
-
     if(reserveMovie.length == 0 || reserveDate.length == 0){    //  예약이 존재하지 않을 경우
         return allData;
     }
@@ -99,6 +96,7 @@ async function getMain(userIdx) {
 
     const dateLength = Object.keys(reserveDate) // idx.length
     let duplicationDateValue = reserveDate[0].reservationDate;  // 중복확인 value
+    let duplicationTimeValue = reserveDate[0].reservationTime;
 
     let dateData = {
         "reservationDate" : "",
@@ -116,7 +114,11 @@ async function getMain(userIdx) {
             }
 
             if(reserveDate[i].reservationDate == duplicationDateValue){ // 중복확인, 중복일 경우
-                dateData.reservationTime.push(reserveDate[i].reservationTime)   // time push
+                console.log(reserveDate[i].reservationDate, duplicationTimeValue, reserveDate[i].reservationTime)
+                if(duplicationTimeValue != reserveDate[i].reservationTime){
+                    dateData.reservationTime.push(reserveDate[i].reservationTime)   // time push
+                    duplicationTimeValue = reserveDate[i].reservationTime;
+                }
             } else {    // 중복이 아닐 경우, reservationDate new value
                 dateData = {    // dateData Initialization
                     "reservationDate" : "",
@@ -125,23 +127,10 @@ async function getMain(userIdx) {
                 }
                 dateData.reservationDate = reserveDate[i].reservationDate;
                 dateData.reservationWeekday = reserveDate[i].reservationWeekday;
-                dateData.reservationTime.push(reserveDate[i].reservationTime);
                 duplicationDateValue = reserveDate[i].reservationDate;
                 allData.reserveDate.push(dateData);
             }
         }
-
-        let timeFilterArr = dateData.reservationTime.filter((item, idx, array) =>{
-            return array.indexOf(item) === idx;
-        });
-
-        dateData.reservationTime.splice(0,dateData.reservationTime.length); // 배열 초기
-
-        for(let i = 0; i<timeFilterArr.length; i++){
-            dateData.reservationTime[i] = timeFilterArr[i]
-        }
-
-        dateData.reservationTime.sort(function(a, b) {return a-b}); // 오름차순 정렬
         
         for(let i = 0; i < allData.reserveMovie.length - 1; i++) {  // reserveMovie.movieIdx 중복제거
             for(let j = i + 1; j < allData.reserveMovie.length; j++) {
@@ -164,6 +153,7 @@ async function getMain(userIdx) {
                 }
             }   
         }
+        
     return allData;
 }
 
