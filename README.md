@@ -23,14 +23,14 @@
 ## Workflow
 
 
-![workflow]() (미정)
+![workflow](https://user-images.githubusercontent.com/46750574/71696597-c3e62280-2df8-11ea-8cf2-c1b5b1c29fb7.png)
 
 
 
 
 ## Architecture
 
-![architecture]() (미정)
+![architecture](https://user-images.githubusercontent.com/30704569/71709202-24954f80-2e39-11ea-866c-71194528860f.png)
 
 
 ## DB ERD
@@ -42,18 +42,8 @@
 ## Depenedncy Module
 사용 패키지(모듈)은 다음과 같습니다.
 
-* crypto : 패스워드 암호화 및 인증
-* express : 웹,서버 개발 프레임워크
-* 
-*
-*
-*
-*
-*
-
 ```json
-{
-  "dependencies": {
+"dependencies": {
     "aws-sdk": "^2.596.0",
     "cookie-parser": "~1.4.4",
     "crypto": "^1.0.1",
@@ -71,7 +61,6 @@
     "promise-mysql": "^4.1.1",
     "pug": "^2.0.4"
   }
-}
 ```
 
 
@@ -129,9 +118,9 @@ npm start
 ## 개발자
 
 * [이상윤](https://github.com/syndersonLEE)
-* [양희연]()
+* [양희연](https://github.com/hhiyeon)
 * [이다현](https://github.com/leeda66)
-* [이재용]()
+* [이재용](https://github.com/jaeyong136)
 
 
 [기여자 목록](https://github.com/TeamMoBo/mobo-server/graphs/contributors)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
