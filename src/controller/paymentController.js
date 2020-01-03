@@ -16,8 +16,8 @@ async function postPay(req, res) {
 
     const userIdx = decoded.idx;
     const userPayData = req.body;
+    //console.log("페이 데이터" + userPayData);
     const payData = await paymentService.postPay(userIdx, userPayData);
-    //console.log(payData);
 
     if (!payData) {
       console.log("존재하지 않는 파라미터");
